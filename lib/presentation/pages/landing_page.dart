@@ -32,16 +32,18 @@ class LandingPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Row(
-                children: List.generate(
-                    10,
-                    (index) => SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
+            Expanded(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: ((context, index) => SizedBox(
                         width: MediaQuery.of(context).size.width * 0.3,
                         child: const Card(
                           elevation: 1,
-                        ))),
+                        ),
+                      )),
+                ),
               ),
             ),
             Column(
