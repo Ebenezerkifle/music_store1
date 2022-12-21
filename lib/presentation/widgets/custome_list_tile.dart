@@ -5,14 +5,15 @@ Widget customeListTile({
   required BuildContext context,
 }) {
   return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.2,
+    height: MediaQuery.of(context).size.height * 0.12,
     width: MediaQuery.of(context).size.width,
     child: Card(
-      elevation: 3,
+      elevation: 1,
+      //shadowColor: Colors.white,
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.01,
-          horizontal: MediaQuery.of(context).size.width * 0.02,
+          vertical: MediaQuery.of(context).size.height * 0.005,
+          horizontal: MediaQuery.of(context).size.width * 0.01,
         ),
         color: darkColor,
         child: Row(
@@ -26,7 +27,7 @@ Widget customeListTile({
                     width: MediaQuery.of(context).size.height * 0.15,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
+                      color: myYellow,
                     ),
                     child: IconButton(
                       onPressed: () {},
@@ -40,25 +41,44 @@ Widget customeListTile({
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "The Title of The song",
+                  children: [
+                    const Text(
+                      "The Title of the Song",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Colors.white,
                       ),
                     ),
-                    Text("sub title of the song...")
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    const Text(
+                      "Sub title of the song...",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
                   ],
                 )
               ],
             ),
             Row(
               children: [
-                const Text("5:20"),
+                const Text(
+                  "5:20",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             )
