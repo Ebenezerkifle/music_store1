@@ -4,18 +4,18 @@ import 'package:mucic_store/presentation/my_colors/color.dart';
 Widget customeListTile({
   required BuildContext context,
 }) {
-  return SizedBox(
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 0.05),
     height: MediaQuery.of(context).size.height * 0.12,
     width: MediaQuery.of(context).size.width,
     child: Card(
       elevation: 1,
-      //shadowColor: Colors.white,
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height * 0.005,
           horizontal: MediaQuery.of(context).size.width * 0.01,
         ),
-        color: darkColor,
+        color: silver,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
