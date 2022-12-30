@@ -2,85 +2,97 @@ import 'package:flutter/material.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 
 Widget customeListTile({
+  required String title,
   required BuildContext context,
+  required VoidCallback onTap,
+  required List<String>? smallDetails,
+  Color? color,
 }) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 0.05),
-    height: MediaQuery.of(context).size.height * 0.12,
-    width: MediaQuery.of(context).size.width,
-    child: Card(
-      elevation: 1,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.005,
-          horizontal: MediaQuery.of(context).size.width * 0.01,
-        ),
-        color: silver,
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 0.11,
+    child: GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: color ?? Colors.white,
+        shadowColor: MyColors.bright2,
+        elevation: 2,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.height * 0.15,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: myYellow,
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.play_arrow_sharp,
-                      ),
-                    )),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "The Title of the Song",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.white,
+                CircleAvatar(
+                  radius: MediaQuery.of(context).size.height * 0.04,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: const AssetImage(
+                    'assets/images/mic.jpg',
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.02,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        textScaleFactor: 1.2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: (color != null) ? Colors.white : Colors.black,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    const Text(
-                      "Sub title of the song...",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w100,
-                      ),
-                    ),
-                  ],
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                            smallDetails!.length,
+                            (index) => Text(
+                              smallDetails[index],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
                 )
               ],
             ),
-            Row(
-              children: [
-                const Text(
-                  "5:20",
-                  style: TextStyle(
-                    color: Colors.white,
+            Padding(
+              padding: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width * 0.02,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text("5:13",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal,
+                          )),
+                      Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      )
+                    ],
                   ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

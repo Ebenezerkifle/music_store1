@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mucic_store/presentation/pages/landing_page.dart';
+import 'package:mucic_store/presentation/my_colors/color.dart';
+import 'package:mucic_store/presentation/pages/albums_list.dart';
+import 'package:mucic_store/presentation/pages/track_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,9 +16,12 @@ class MyApp extends StatelessWidget {
       title: 'Music Store',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: MyColors.primaryColor,
       ),
-      home: const LandingPage(),
+      home: const AlbumListPage(),
+      // home: const TrackListPage(
+      //   title: 'Track List',
+      // ),
     );
   }
 }

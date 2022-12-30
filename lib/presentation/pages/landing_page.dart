@@ -70,7 +70,7 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkColor,
+        backgroundColor: MyColors.primaryColor,
         title: const Text('Mall ET'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
@@ -81,7 +81,7 @@ class _LandingPageState extends State<LandingPage> {
       ),
       body: SafeArea(
         child: Container(
-          color: darkColor,
+          color: MyColors.primaryColor,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             controller: _scrollController,
@@ -114,10 +114,10 @@ class _LandingPageState extends State<LandingPage> {
                 delegate: PersistentHeader(
                   height: MediaQuery.of(context).size.height * 0.52,
                   //minHeight: MediaQuery.of(context).size.height * 0.25,
-                  color: darkColor,
+                  color: MyColors.primaryColor,
                   context: context,
                   widget: Container(
-                    color: darkColor,
+                    color: MyColors.primaryColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -158,6 +158,9 @@ class _LandingPageState extends State<LandingPage> {
                               itemCount: 10,
                               itemBuilder: (context, index) => customeListTile(
                                 context: context,
+                                onTap: () {},
+                                smallDetails: [],
+                                title: '',
                               ),
                             ),
                           ),
@@ -248,7 +251,7 @@ class _LandingPageState extends State<LandingPage> {
                                             left: 5, right: 5),
                                         decoration: BoxDecoration(
                                             color: (activeIndex == index)
-                                                ? myYellow
+                                                ? MyColors.bright
                                                 : Colors.white.withOpacity(0),
                                             border: Border.all(
                                               width: 0.1,
@@ -298,7 +301,7 @@ class _LandingPageState extends State<LandingPage> {
           onPressed: () {
             scrollToTop();
           },
-          backgroundColor: darkColor,
+          backgroundColor: MyColors.primaryColor,
           child: const Icon(
             Icons.keyboard_arrow_up,
             color: Colors.white,
