@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mucic_store/presentation/widgets/slider.dart';
 
 import '../my_colors/color.dart';
 
@@ -51,6 +52,7 @@ class PlayingPage extends StatelessWidget {
                 ],
               ),
               // SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+              // const SliderWidget(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
