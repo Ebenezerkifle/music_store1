@@ -65,14 +65,26 @@ Widget customeGridWidget({
             ],
           ),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.play_circle,
-          ),
-          color: Colors.white,
-          iconSize: 30,
-        )
+        Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Container(
+                width: MediaQuery.of(context).size.width * 0.12,
+                height: MediaQuery.of(context).size.width * 0.12,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                )),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.play_circle,
+              ),
+              color: Colors.white,
+              iconSize: 40,
+            ),
+          ],
+        ),
       ],
     ),
   );
