@@ -2,6 +2,8 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 
+import '../../logic/page_manager.dart';
+
 class PlayController extends StatefulWidget {
   double iconSize;
   PlayController({
@@ -14,7 +16,19 @@ class PlayController extends StatefulWidget {
 }
 
 class _PlayControllerState extends State<PlayController> {
-  double _currentSliderValue = 0;
+  late final PageManager _pageManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageManager = PageManager();
+  }
+
+  @override
+  void dispose() {
+    _pageManager.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,52 +48,75 @@ class _PlayControllerState extends State<PlayController> {
             color: Colors.grey,
           ),
         ),
-        const ProgressBar(
-          progress: Duration.zero,
-          total: Duration(minutes: 5, seconds: 10),
-          thumbColor: Colors.yellow,
-          thumbGlowColor: Colors.white,
-          baseBarColor: Colors.grey,
-          progressBarColor: Colors.yellow,
-          timeLabelLocation: TimeLabelLocation.below,
-          timeLabelTextStyle: TextStyle(color: Colors.white),
-          timeLabelType: TimeLabelType.remainingTime,
+        ValueListenableBuilder<ProgressBarState>(
+          valueListenable: _pageManager.progressNotifier,
+          builder: (_, value, __) {
+            return ProgressBar(
+              progress: value.current,
+              total: value.total,
+              buffered: value.buffered,
+              thumbColor: Colors.yellow,
+              thumbGlowColor: Colors.white,
+              baseBarColor: Colors.grey,
+              progressBarColor: Colors.yellow,
+              timeLabelLocation: TimeLabelLocation.below,
+              timeLabelTextStyle: const TextStyle(color: Colors.white),
+              timeLabelType: TimeLabelType.totalTime,
+              onSeek: _pageManager.seek,
+            );
+          },
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.loop),
-              color: Colors.white,
-              iconSize: widget.iconSize * 0.6,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.skip_previous_rounded),
-              color: Colors.white,
-              iconSize: widget.iconSize * 0.8,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.play_circle_outline_sharp),
-              color: Colors.white,
-              iconSize: widget.iconSize,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.skip_next_rounded),
-              color: Colors.white,
-              iconSize: widget.iconSize * 0.8,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.stop_rounded),
-              color: Colors.white,
-              iconSize: widget.iconSize * 0.6,
-            ),
-          ],
-        ),
+        ValueListenableBuilder<ButtonState>(
+            valueListenable: _pageManager.buttonNotifier,
+            builder: (context, value, __) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.repeat_outlined), //shuffle
+                    color: Colors.white,
+                    iconSize: widget.iconSize * 0.6,
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.skip_previous_rounded),
+                    color: Colors.white,
+                    iconSize: widget.iconSize * 0.8,
+                  ),
+                  value == ButtonState.paused
+                      ? IconButton(
+                          onPressed: _pageManager.play,
+                          icon: const Icon(Icons.play_circle_outline_sharp),
+                          color: Colors.white,
+                          iconSize: widget.iconSize,
+                        )
+                      : value == ButtonState.loading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : IconButton(
+                              onPressed: _pageManager.pause,
+                              icon: const Icon(
+                                  Icons.pause_circle_outline_outlined),
+                              color: Colors.white,
+                              iconSize: widget.iconSize,
+                            ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.skip_next_rounded),
+                    color: Colors.white,
+                    iconSize: widget.iconSize * 0.8,
+                  ),
+                  IconButton(
+                    onPressed: _pageManager.stop,
+                    icon: const Icon(Icons.stop_rounded),
+                    color: Colors.white,
+                    iconSize: widget.iconSize * 0.6,
+                  ),
+                ],
+              );
+            }),
       ],
     );
   }
