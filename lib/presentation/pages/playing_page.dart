@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mucic_store/presentation/widgets/slider.dart';
+import 'package:mucic_store/presentation/widgets/play_controller.dart';
 
 import '../my_colors/color.dart';
 
@@ -15,79 +15,34 @@ class PlayingPage extends StatelessWidget {
             child: Text("Now Playing"),
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+            IconButton(onPressed: () {}, icon: const Icon(Icons.list))
           ]),
       body: SafeArea(
         child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.1,
           ),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/mic.jpg"),
+              fit: BoxFit.cover,
+              opacity: 0.2,
+            ),
+          ),
           alignment: AlignmentDirectional.center,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               CircleAvatar(
-                radius: MediaQuery.of(context).size.height * 0.3,
+                radius: MediaQuery.of(context).size.width * 0.47,
                 backgroundColor: Colors.transparent,
                 backgroundImage: const AssetImage(
                   'assets/images/mic.jpg',
                 ),
               ),
-              Column(
-                children: const [
-                  Text(
-                    "Song Title",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
-                  ),
-                  Text(
-                    "subtitle of the song",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                    ),
-                  )
-                ],
-              ),
-              // SizedBox(height: MediaQuery.of(context).size.height * 0.07),
-              // const SliderWidget(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.loop),
-                    color: Colors.white,
-                    iconSize: 30,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.skip_previous_rounded),
-                    color: Colors.white,
-                    iconSize: 45,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.play_circle_outline_sharp),
-                    color: Colors.white,
-                    iconSize: 55,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.skip_next_rounded),
-                    color: Colors.white,
-                    iconSize: 45,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.stop_circle_outlined),
-                    color: Colors.white,
-                    iconSize: 30,
-                  ),
-                ],
-              )
+              PlayController(iconSize: 50),
             ],
           ),
         ),

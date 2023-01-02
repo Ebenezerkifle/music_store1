@@ -24,7 +24,7 @@ class PersistentHeader extends SliverPersistentHeaderDelegate {
       height: height,
       child: Card(
         margin: const EdgeInsets.all(0),
-        color: Colors.white,
+        color: color ?? Colors.white,
         //elevation: 5.0,
         child: Center(child: widget),
       ),

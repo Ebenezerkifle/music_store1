@@ -8,6 +8,7 @@ Widget customeGridWidget({
   required double width,
   required String title,
   required List<String> smallDetails,
+  required bool? playing,
 }) {
   return GestureDetector(
     onTap: onTap,
@@ -77,10 +78,12 @@ Widget customeGridWidget({
                 )),
             IconButton(
               onPressed: () {},
-              icon: const Icon(
-                Icons.play_circle,
+              icon: Icon(
+                playing != null && playing
+                    ? Icons.pause_circle
+                    : Icons.play_circle,
               ),
-              color: Colors.white,
+              color: playing != null && playing ? Colors.yellow : Colors.white,
               iconSize: 40,
             ),
           ],

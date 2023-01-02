@@ -71,7 +71,7 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.primaryColor,
-        title: const Text('Mall ET'),
+        title: const Text('Music Store'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.shopping_cart)),
@@ -102,7 +102,7 @@ class _LandingPageState extends State<LandingPage> {
                       top: 10,
                     ),
                     child: Image(
-                      image: AssetImage('assets/images/mena_product.jpg'),
+                      image: AssetImage('assets/images/mic.jpg'),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -128,7 +128,7 @@ class _LandingPageState extends State<LandingPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                'Nearby Buildings',
+                                'Albums',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -161,6 +161,7 @@ class _LandingPageState extends State<LandingPage> {
                                 onTap: () {},
                                 smallDetails: [],
                                 title: '',
+                                playing: index == 2 ? true : false,
                               ),
                             ),
                           ),
@@ -187,7 +188,7 @@ class _LandingPageState extends State<LandingPage> {
                                                 0.04,
                                         backgroundColor: Colors.transparent,
                                         backgroundImage: const AssetImage(
-                                          'assets/images/building.jpg',
+                                          'assets/images/mic.jpg',
                                         ),
                                       ),
                                       const Text(
@@ -211,7 +212,7 @@ class _LandingPageState extends State<LandingPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                'Nearby Top Services',
+                                'Tracks',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -288,7 +289,13 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return Container();
+                  return customeListTile(
+                    context: context,
+                    smallDetails: [],
+                    onTap: () {},
+                    title: "Song Title",
+                    playing: index == 2 ? true : false,
+                  );
                 }),
               ),
             ],

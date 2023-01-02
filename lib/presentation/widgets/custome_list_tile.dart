@@ -7,6 +7,7 @@ Widget customeListTile({
   required VoidCallback onTap,
   required List<String>? smallDetails,
   Color? color,
+  required bool playing,
 }) {
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.11,
@@ -26,12 +27,25 @@ Widget customeListTile({
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                CircleAvatar(
-                  radius: MediaQuery.of(context).size.height * 0.04,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: const AssetImage(
-                    'assets/images/mic.jpg',
-                  ),
+                Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    CircleAvatar(
+                      radius: MediaQuery.of(context).size.height * 0.04,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage: const AssetImage(
+                        'assets/images/mic.jpg',
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(playing
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded),
+                      color: playing ? Colors.yellow : Colors.white,
+                      iconSize: 38,
+                    )
+                  ],
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,

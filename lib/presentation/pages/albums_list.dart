@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
+import 'package:mucic_store/presentation/pages/album_track_page.dart';
+import 'package:mucic_store/presentation/pages/track_list_page.dart';
 
 import '../widgets/custome_grid_list.dart';
 
@@ -35,12 +37,19 @@ class _AlbumListPageState extends State<AlbumListPage> {
         children: List.generate(
           20,
           (index) => customeGridWidget(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AlbumTrackPage(),
+                  ));
+            },
             context: context,
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.5,
             title: 'Album Title',
             smallDetails: ["10 tracks"],
+            playing: (index == 2) ? true : false,
           ),
         ),
       ),
