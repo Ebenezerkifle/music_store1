@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 class PageManager {
-  static const url =
-      'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
+  final String url;
   late AudioPlayer _audioPlayer;
-  PageManager() {
+  PageManager({required this.url}) {
     _init();
   }
   void _init() async {
     _audioPlayer = AudioPlayer();
+
     await _audioPlayer.setUrl(url);
     _audioPlayer.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;

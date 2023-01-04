@@ -140,12 +140,13 @@ class _TrackListPageState extends State<TrackListPage> {
                 return customeListTile(
                   title: "Song title",
                   context: context,
+                  onPlayTap: () {},
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlayingPage()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const PlayingPage()),
+                    // );
                   },
                   smallDetails: ['subtitle of the song'],
                   color: MyColors.primaryColor,

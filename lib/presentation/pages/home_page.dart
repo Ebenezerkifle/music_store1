@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
+import '../../logic/music/music_bloc.dart';
+import '../../logic/play_controller/play_controller_bloc.dart';
 import '../my_colors/color.dart';
-import '../widgets/play_controller.dart';
+import '../widgets/play_controller_page.dart';
 import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
+
+// homepage is the landing page for this application. on which we have a lote options
+// to choose what ever we want to choose.
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,26 +25,40 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //The app displays a list of musics which are catagorized on different possible
+  //catagories. catagoryList is a variable to store those catagories.
   List<String> catagoryList = [
     "All",
     "Recent",
     "Favorite",
   ];
+
+  // active Index is a variable that stores the index value of a catagoryList above
+  // so that corresponding list of musics displayed.
   int activeIndex = 0;
+
+  // ToDo this logic is not working yet!
   bool playing = false;
+
+  //a variable to control the visisbility of a floating button.
   late bool floatingButtonVisiblity = false;
-  //a variable to control the visibility of a floating button.
+  //a variable to control the visibility of a bottom Navigation bar.
   late bool bottomNavVisibility = true;
 
+  // scroll controller is here to give us the information about our scrolling
+  // we want this controller to help us decide if the floating button and bottom navigation bar
+  // has to be hidden or not.
   final ScrollController _scrollController = ScrollController();
 
+  //init state calls the listener as soon as the app starts, to get the information about
+  // the scrolling.
   @override
   void initState() {
     _scrollController.addListener(() {
       //scroll listener
-
       double showoffset = 40.0;
-      //Back to top botton will show on scroll offset 40.0
+      //Back to top button(floating action button) will show on scroll offset 40.0
+      //Bottom Navigation button will get hide on scroll offset 40.0.
       if (_scrollController.offset > showoffset) {
         floatingButtonVisiblity = true;
         bottomNavVisibility = false;
@@ -107,7 +128,10 @@ class _HomePageState extends State<HomePage> {
                               opacity: 0.3,
                             ),
                           ),
-                          child: PlayController(iconSize: 40),
+                          // Todo check the following line of code!
+                          // child: PlayController(
+                          //   songDetail: ,
+                          //   iconSize: 40),
                         ),
                       ),
                     )
@@ -312,26 +336,67 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return customeListTile(
-                      title: "Song title",
-                      context: context,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PlayingPage()),
+              BlocBuilder<MusicBloc, MusicState>(
+                builder: (context, state) {
+                  return (state is MusicLoadedState)
+                      ? SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return BlocBuilder<PlayControllerBloc,
+                                  PlayControllerState>(
+                                builder: (context, controllerState) {
+                                  bool isPlaying =
+                                      controllerState is PlayingState &&
+                                          controllerState.currentSong.index ==
+                                              index;
+                                  return customeListTile(
+                                    title: state.songList[index].title,
+                                    context: context,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PlayingPage(
+                                                  song: state.songList[index],
+                                                  isPlaying: isPlaying,
+                                                )),
+                                      );
+                                    },
+                                    onPlayTap: (() {
+                                      BlocProvider.of<PlayControllerBloc>(
+                                              context)
+                                          .add((!isPlaying)
+                                              ? PlayEvent(
+                                                  song: state.songList[index],
+                                                  index: index)
+                                              : PauseEvent(
+                                                  uri: state.songList[index]
+                                                          .uri ??
+                                                      '',
+                                                ));
+                                    }),
+                                    smallDetails: [
+                                      state.songList[index].displayNameWOExt,
+                                    ],
+                                    color: MyColors.primaryColor,
+                                    playing: isPlaying,
+                                    duration: state.songList[index].duration,
+                                  );
+                                },
+                              );
+                            },
+                            childCount: state.songList.length,
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return const CircularProgressIndicator();
+                            },
+                            childCount: 5,
+                          ),
                         );
-                      },
-                      smallDetails: ['subtitle of the song'],
-                      color: MyColors.primaryColor,
-                      playing: (index == 2) ? true : false,
-                    );
-                  },
-                  childCount: 22,
-                ),
+                },
               ),
             ],
           ),

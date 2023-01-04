@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mucic_store/presentation/widgets/play_controller.dart';
+import 'package:mucic_store/presentation/widgets/play_controller_page.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
+import '../../logic/page_manager.dart';
 import '../my_colors/color.dart';
 
 class PlayingPage extends StatelessWidget {
-  const PlayingPage({Key? key}) : super(key: key);
+  final SongModel song;
+  final bool isPlaying;
+  const PlayingPage({
+    Key? key,
+    required this.song,
+    required this.isPlaying,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,11 @@ class PlayingPage extends StatelessWidget {
                   'assets/images/mic.jpg',
                 ),
               ),
-              PlayController(iconSize: 50),
+              PlayController(
+                songDetail: song,
+                isPlaying: isPlaying,
+                iconSize: 50,
+              ),
             ],
           ),
         ),

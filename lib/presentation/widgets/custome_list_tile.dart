@@ -8,6 +8,8 @@ Widget customeListTile({
   required List<String>? smallDetails,
   Color? color,
   required bool playing,
+  int? duration,
+  required VoidCallback onPlayTap,
 }) {
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.11,
@@ -38,7 +40,7 @@ Widget customeListTile({
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: onPlayTap,
                       icon: Icon(playing
                           ? Icons.pause_rounded
                           : Icons.play_arrow_rounded),

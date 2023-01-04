@@ -118,12 +118,13 @@ class AlbumTrackPage extends StatelessWidget {
                   title: "Song title",
                   context: context,
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlayingPage()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const PlayingPage()),
+                    // );
                   },
+                  onPlayTap: () {},
                   smallDetails: ['subtitle of the song'],
                   color: MyColors.primaryColor,
                   playing: (index == 2) ? true : false,
