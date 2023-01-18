@@ -349,8 +349,6 @@ class _HomePageState extends State<HomePage> {
                                       controllerState is PlayingState &&
                                           controllerState.currentSong.index ==
                                               index;
-                                  print(index);
-                                  print(state.songList[index].duration);
                                   return customeListTile(
                                     title: state.songList[index].title,
                                     context: context,
