@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:get/get.dart';
 
 Widget customeListTile({
   required String title,
@@ -7,10 +10,13 @@ Widget customeListTile({
   required VoidCallback onTap,
   required List<String>? smallDetails,
   Color? color,
-  required bool playing,
-  int? duration,
+  required Duration duration,
   required VoidCallback onPlayTap,
+  required int id,
 }) {
+  final playerController = Get.find<PlayerController>();
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
+
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.11,
     child: GestureDetector(
@@ -32,20 +38,29 @@ Widget customeListTile({
                 Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
-                    CircleAvatar(
-                      radius: MediaQuery.of(context).size.height * 0.04,
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: const AssetImage(
-                        'assets/images/mic.jpg',
+                    QueryArtworkWidget(
+                      id: id,
+                      type: ArtworkType.AUDIO,
+                      nullArtworkWidget: CircleAvatar(
+                        radius: MediaQuery.of(context).size.height * 0.04,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: const AssetImage(
+                          'assets/images/mic.jpg',
+                        ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: onPlayTap,
-                      icon: Icon(playing
-                          ? Icons.pause_rounded
-                          : Icons.play_arrow_rounded),
-                      color: playing ? Colors.yellow : Colors.white,
-                      iconSize: 38,
+                    Obx(
+                      () => IconButton(
+                        onPressed: onPlayTap,
+                        icon: Icon(playerController.playing.value &&
+                                playerController.songId.value == id
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded),
+                        color: playerController.songId.value == id
+                            ? Colors.yellow
+                            : Colors.white,
+                        iconSize: 38,
+                      ),
                     )
                   ],
                 ),
@@ -54,33 +69,42 @@ Widget customeListTile({
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        title,
-                        textScaleFactor: 1.2,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: (color != null) ? Colors.white : Colors.black,
+                  child: Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          textScaleFactor: 1.2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: (playerController.songId.value == id)
+                                ? Colors.yellow
+                                : (color != null)
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
                         ),
-                      ),
-                      Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: List.generate(
                             smallDetails!.length,
                             (index) => Text(
                               smallDetails[index],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey,
+                                color: (playerController.songId.value == id)
+                                    ? Colors.yellow
+                                    : Colors.grey,
                               ),
                             ),
-                          )),
-                    ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -93,19 +117,26 @@ Widget customeListTile({
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text("5:13",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal,
-                          )),
-                      Icon(
-                        Icons.more_vert,
-                        color: Colors.white,
-                      )
-                    ],
+                  Obx(
+                    () => Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                            (playerController.songId.value == id)
+                                ? '${twoDigits(playerController.remaining.value.inMinutes)}:${twoDigits(playerController.remaining.value.inSeconds.remainder(60))}'
+                                : '${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}',
+                            style: TextStyle(
+                              color: (playerController.songId.value == id)
+                                  ? Colors.yellow
+                                  : Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            )),
+                        const Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

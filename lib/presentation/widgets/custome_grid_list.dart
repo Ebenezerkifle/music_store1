@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 Widget customeGridWidget({
   required BuildContext context,
@@ -9,6 +10,7 @@ Widget customeGridWidget({
   required String title,
   required List<String> smallDetails,
   required bool? playing,
+  required int id,
 }) {
   return GestureDetector(
     onTap: onTap,
@@ -25,16 +27,22 @@ Widget customeGridWidget({
               Container(
                 height: height,
                 width: width,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/mic.jpg'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                    color: MyColors.primaryColor,
-                    shape: BoxShape.rectangle),
+                child: QueryArtworkWidget(
+                  id: id,
+                  type: ArtworkType.ALBUM,
+                  nullArtworkWidget: Container(
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/mic.jpg'),
+                          fit: BoxFit.fitWidth,
+                        ),
+                        color: MyColors.primaryColor,
+                        shape: BoxShape.rectangle),
+                  ),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, left: 5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

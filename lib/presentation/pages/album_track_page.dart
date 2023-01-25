@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:mucic_store/presentation/pages/playing_page.dart';
+import 'package:mucic_store/controller/song_controller.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 import '../my_colors/color.dart';
+import '../widgets/custome_grid_list.dart';
 import '../widgets/custome_list_tile.dart';
 import '../widgets/silver_presistent_widget.dart';
+import 'package:get/get.dart';
 
 class AlbumTrackPage extends StatelessWidget {
-  AlbumTrackPage({Key? key}) : super(key: key);
+  final AlbumModel album;
+  AlbumTrackPage({Key? key, required this.album}) : super(key: key);
 
-  List<String> albumDetail = [
-    "Album Title",
-    "artist name",
-    "12 tracks",
-    "Dec 20, 2022",
-  ];
+  final songController = Get.find<SongController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
-        title: const Text(
-          "Album Title",
-          style: TextStyle(
+        title: Text(
+          album.album,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -45,7 +43,7 @@ class AlbumTrackPage extends StatelessWidget {
             pinned: false,
             floating: true,
             delegate: PersistentHeader(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.33,
               color: Colors.black,
               context: context,
               widget: Container(
@@ -57,16 +55,20 @@ class AlbumTrackPage extends StatelessWidget {
                     Stack(
                       alignment: AlignmentDirectional.bottomEnd,
                       children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                        customeGridWidget(
+                          id: album.id,
+                          context: context,
+                          title: album.album,
+                          height: MediaQuery.of(context).size.height * 0.23,
                           width: MediaQuery.of(context).size.width * 0.4,
-                          // color: Colors.white,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/mic.jpg"),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
+                          smallDetails: [
+                            album.artist ?? album.numOfSongs.toString(),
+                          ],
+                          playing: false,
+                          onTap: () {
+                            // Get.to(() =>
+                            //     AlbumTrackPage(album: songController.albumList[index]));
+                          },
                         ),
                         Stack(
                           alignment: AlignmentDirectional.topStart,
@@ -89,23 +91,6 @@ class AlbumTrackPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: List.generate(
-                        albumDetail.length,
-                        (index) => Text(
-                          albumDetail[index],
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textScaleFactor: (5 - index) * 0.3,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -117,20 +102,15 @@ class AlbumTrackPage extends StatelessWidget {
                 return customeListTile(
                   title: "Song title",
                   context: context,
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const PlayingPage()),
-                    // );
-                  },
+                  id: 0,
+                  duration: Duration.zero,
+                  onTap: () {},
                   onPlayTap: () {},
                   smallDetails: ['subtitle of the song'],
                   color: MyColors.primaryColor,
-                  playing: (index == 2) ? true : false,
                 );
               },
-              childCount: 12,
+              childCount: album.numOfSongs,
             ),
           ),
         ],

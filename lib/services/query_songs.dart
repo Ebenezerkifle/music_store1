@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class QuerySongs {
   late final OnAudioQuery audioQuery;
-  late final AudioPlayer audioPlayer;
+  late List<SongModel> songList;
 
   QuerySongs() {
     audioQuery = OnAudioQuery();
-    audioPlayer = AudioPlayer();
   }
 
   void requestStoragePermission() async {
@@ -29,7 +28,18 @@ class QuerySongs {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
+    this.songList = songList;
     return songList;
+  }
+
+  // TODO album list should work well!!
+  Map<String, List<SongModel>> getAlbumList() {
+    Map<String, List<SongModel>> albums = {};
+    for (var song in songList) {
+      String albumName = song.album ?? "Unknow";
+      albums.addIf(!albums.containsKey(albumName), albumName, [song]);
+    }
+    return albums;
   }
 
   Future<List<AlbumModel>> getListOfAlbums() async {
@@ -40,16 +50,5 @@ class QuerySongs {
       ignoreCase: true,
     );
     return albumList;
-  }
-
-  void playSong(String? uri) {
-    // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    audioPlayer.play();
-    // audioPlayer.onPlayerStateChanged;
-  }
-
-  void pauseSong() {
-    //audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    audioPlayer.pause();
   }
 }

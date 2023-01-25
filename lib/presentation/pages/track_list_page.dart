@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mucic_store/controller/player_controller.dart';
+import 'package:mucic_store/controller/song_controller.dart';
+import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
+import 'package:get/get.dart';
+import 'package:mucic_store/services/query_songs.dart';
 
+import '../../controller/player_controller.dart';
 import '../widgets/silver_presistent_widget.dart';
 
 class TrackListPage extends StatefulWidget {
@@ -19,7 +25,9 @@ class _TrackListPageState extends State<TrackListPage> {
     "Recent",
     "Favorite",
   ];
-  int activeIndex = 0;
+  final catagoryController = Get.find<TrackCatagoryController>();
+  final playerController = Get.find<PlayerController>();
+  final querySongController = Get.find<QuerySongs>();
 
   final ScrollController _scrollController = ScrollController();
   late bool floatingButtonVisiblity = false;
@@ -85,25 +93,24 @@ class _TrackListPageState extends State<TrackListPage> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: List.generate(
-                          catagoryList.length,
-                          (index) => Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, top: 4.0, bottom: 4.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  activeIndex = index;
-                                  // TODO block needed to handle this event.
-                                });
-                              },
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(left: 5, right: 5),
-                                decoration: BoxDecoration(
-                                    color: (activeIndex == index)
+                      child: Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: List.generate(
+                            catagoryList.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8.0, top: 4.0, bottom: 4.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  catagoryController.updateIndex(index);
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  decoration: BoxDecoration(
+                                    color: (catagoryController.index.value ==
+                                            index)
                                         ? Colors.yellow
                                         : Colors.white.withOpacity(0),
                                     border: Border.all(
@@ -111,16 +118,22 @@ class _TrackListPageState extends State<TrackListPage> {
                                       color: Colors.white54,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(10))),
-                                child: Text(
-                                  catagoryList[index],
-                                  textScaleFactor:
-                                      (activeIndex == index) ? 1.2 : 1.1,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: (activeIndex == index)
-                                        ? Colors.black
-                                        : Colors.white54,
+                                        Radius.circular(10)),
+                                  ),
+                                  child: Text(
+                                    catagoryList[index],
+                                    textScaleFactor:
+                                        (catagoryController.index.value ==
+                                                index)
+                                            ? 1.2
+                                            : 1.1,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: (catagoryController.index.value ==
+                                              index)
+                                          ? Colors.black
+                                          : Colors.white54,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -134,28 +147,63 @@ class _TrackListPageState extends State<TrackListPage> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return customeListTile(
-                  title: "Song title",
-                  context: context,
-                  onPlayTap: () {},
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const PlayingPage()),
-                    // );
-                  },
-                  smallDetails: ['subtitle of the song'],
-                  color: MyColors.primaryColor,
-                  playing: (index == 2) ? true : false,
-                );
-              },
-              childCount: 22,
-            ),
-          ),
+          Obx(
+            () => (catagoryController.currentSongs.isEmpty)
+                ? SliverFillRemaining(
+                    child: Center(
+                      child: Text(
+                        (catagoryController.index.value == 0)
+                            ? "There is no Song in your device"
+                            : (catagoryController.index.value == 1)
+                                ? "No Recent Songs"
+                                : "No Favorite Songs",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return customeListTile(
+                          title: catagoryController.currentSongs[index].title,
+                          context: context,
+                          id: catagoryController.currentSongs[index].id,
+
+                          onTap: () {
+                            Get.to(
+                              () => PlayingPage(
+                                songList: catagoryController.currentSongs,
+                                isPlaying: playerController.isPlaying(
+                                    catagoryController.currentSongs[index].id),
+                                index: index,
+                                id: catagoryController.currentSongs[index].id,
+                              ),
+                            );
+                          },
+                          onPlayTap: () {},
+                          // onPlayTap: playerController.playing.value &&
+                          //         playerController.songId.value ==
+                          //            catagoryController.currentSongs[index].id
+                          //     ? playerController.pause
+                          //     : playerController.play,
+                          smallDetails: [
+                            catagoryController
+                                .currentSongs[index].displayNameWOExt,
+                          ],
+                          color: MyColors.primaryColor,
+                          duration: Duration(
+                              milliseconds: catagoryController
+                                      .currentSongs[index].duration ??
+                                  0),
+                        );
+                      },
+                      childCount: catagoryController.currentSongs.length,
+                    ),
+                  ),
+          )
         ],
       ),
       floatingActionButton: Visibility(
