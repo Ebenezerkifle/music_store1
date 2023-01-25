@@ -547,7 +547,30 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                 IconButton(
-                                  onPressed: playController.toggleShowList,
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25.0),
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            Colors.amberAccent, // <-- SEE HERE
+                                        builder: (context) {
+                                          return SizedBox(
+                                            height: 200,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: const <Widget>[
+                                                Text("Something Came")
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
                                   icon: const Icon(
                                     Icons.playlist_play_rounded,
                                     color: Colors.white,
