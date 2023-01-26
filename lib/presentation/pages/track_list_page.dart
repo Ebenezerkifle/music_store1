@@ -171,7 +171,6 @@ class _TrackListPageState extends State<TrackListPage> {
                           title: catagoryController.currentSongs[index].title,
                           context: context,
                           id: catagoryController.currentSongs[index].id,
-
                           onTap: () {
                             Get.to(
                               () => PlayingPage(
@@ -183,12 +182,13 @@ class _TrackListPageState extends State<TrackListPage> {
                               ),
                             );
                           },
-                          onPlayTap: () {},
-                          // onPlayTap: playerController.playing.value &&
-                          //         playerController.songId.value ==
-                          //            catagoryController.currentSongs[index].id
-                          //     ? playerController.pause
-                          //     : playerController.play,
+                          onPlayTap: () {
+                            playerController.generatePlayList(
+                                catagoryController.currentSongs, index);
+
+                            playerController.playPauseHandler(
+                                catagoryController.currentSongs[index].id);
+                          },
                           smallDetails: [
                             catagoryController
                                 .currentSongs[index].displayNameWOExt,

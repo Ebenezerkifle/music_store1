@@ -31,24 +31,24 @@ class _AlbumListPageState extends State<AlbumListPage> {
       body: GetX<SongController>(
         builder: (songController) => GridView.count(
           crossAxisCount: 2,
-          crossAxisSpacing: MediaQuery.of(context).size.width * 0.02,
-          mainAxisSpacing: MediaQuery.of(context).size.width * 0.02,
+          crossAxisSpacing: MediaQuery.of(context).size.width * 0.01,
+          mainAxisSpacing: MediaQuery.of(context).size.width * 0.01,
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.02),
+          // padding: EdgeInsets.symmetric(
+          // horizontal: MediaQuery.of(context).size.width * 0.02),
           children: List.generate(
             songController.albumList.length,
             (index) => customeGridWidget(
-              id: songController.albumList[index].id,
+              id: songController.albumList[index][0].id,
               context: context,
-              title: songController.albumList[index].album,
+              title: songController.albumList[index][0].album ?? '',
               height: MediaQuery.of(context).size.height * 0.2,
               width: MediaQuery.of(context).size.width * 0.4,
               smallDetails: [
-                songController.albumList[index].artist ??
-                    songController.albumList[index].numOfSongs.toString(),
+                songController.albumList[index][0].artist ??
+                    songController.albumList[index].length.toString(),
               ],
-              playing: (index == 1) ? true : false,
+              playing: false,
               onTap: () {
                 Get.to(() =>
                     AlbumTrackPage(album: songController.albumList[index]));

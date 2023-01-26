@@ -104,37 +104,36 @@ class PlayingPage extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: List.generate(
-                    songListController.songList.length,
-                    (index) => GestureDetector(
-                          onTap: () {
-                            playerController.generatePlayList(
-                                songListController.songList, index);
-                          },
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  songListController.songList[index].title,
-                                  style: TextStyle(
-                                      color: songListController
-                                                  .songList[index].id ==
-                                              playerController.songId.value
-                                          ? Colors.yellow
-                                          : Colors.white),
-                                  textScaleFactor: 1.1,
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.cancel,
-                                      color: songListController
-                                                  .songList[index].id ==
-                                              playerController.songId.value
-                                          ? Colors.yellow
-                                          : Colors.white),
-                                )
-                              ]),
-                        )),
+                  songListController.songList.length,
+                  (index) => GestureDetector(
+                    onTap: () {
+                      playerController.generatePlayList(
+                          songListController.songList, index);
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            songListController.songList[index].title,
+                            style: TextStyle(
+                                color: songListController.songList[index].id ==
+                                        playerController.songId.value
+                                    ? Colors.yellow
+                                    : Colors.white),
+                            textScaleFactor: 1.1,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.cancel,
+                                color: songListController.songList[index].id ==
+                                        playerController.songId.value
+                                    ? Colors.yellow
+                                    : Colors.white),
+                          )
+                        ]),
+                  ),
+                ),
               ),
             ),
           ),
@@ -142,32 +141,35 @@ class PlayingPage extends StatelessWidget {
       ),
       bottomNavigationBar: Obx(
         () => Visibility(
-            visible: playerController.showList.value,
-            child: GestureDetector(
-              onTap: playerController.toggleShowList,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.07,
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(
-                    width: 0.1,
-                    color: Colors.white,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+          visible: playerController.showList.value,
+          child: GestureDetector(
+            onTap: playerController.toggleShowList,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                border: Border.all(
+                  width: 0.1,
+                  color: Colors.white,
                 ),
-                child: const Center(
-                  child: Text(
-                    "close",
-                    textScaleFactor: 1.2,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  "close",
+                  textScaleFactor: 1.2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }

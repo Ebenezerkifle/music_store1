@@ -36,8 +36,15 @@ class QuerySongs {
   Map<String, List<SongModel>> getAlbumList() {
     Map<String, List<SongModel>> albums = {};
     for (var song in songList) {
+      List<SongModel> songList = [];
       String albumName = song.album ?? "Unknow";
-      albums.addIf(!albums.containsKey(albumName), albumName, [song]);
+      if (albums.containsKey(albumName)) {
+        songList = albums[albumName] ?? [];
+        songList.add(song);
+        albums.update(albumName, (value) => songList);
+      } else {
+        albums[albumName] = [song];
+      }
     }
     return albums;
   }

@@ -185,25 +185,25 @@ class _HomePageState extends State<HomePage> {
                               child: ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
-                                itemCount: songListController.albumList.length,
+                                itemCount: songListController.albums.length,
                                 itemBuilder: (context, index) =>
                                     customeGridWidget(
-                                  id: songListController.albumList[index].id,
+                                  id: songListController.albumList[index][0].id,
                                   context: context,
-                                  title:
-                                      songListController.albumList[index].album,
+                                  title: songListController
+                                          .albumList[index][0].album ??
+                                      '',
                                   height:
                                       MediaQuery.of(context).size.height * 0.2,
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
                                   smallDetails: [
                                     songListController
-                                            .albumList[index].artist ??
-                                        songListController
-                                            .albumList[index].numOfSongs
+                                            .albumList[index][0].artist ??
+                                        songListController.albumList.length
                                             .toString(),
                                   ],
-                                  playing: (index == 1) ? true : false,
+                                  playing: false,
                                   onTap: () {
                                     Get.to(() => AlbumTrackPage(
                                         album: songListController
@@ -556,17 +556,79 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                         backgroundColor:
-                                            Colors.amberAccent, // <-- SEE HERE
+                                            Colors.black, // <-- SEE HERE
                                         builder: (context) {
-                                          return SizedBox(
-                                            height: 200,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: const <Widget>[
-                                                Text("Something Came")
-                                              ],
+                                          return Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.7,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.02,
+                                                vertical: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.07),
+                                            child: SingleChildScrollView(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              child: Column(
+                                                children: List.generate(
+                                                    songListController
+                                                        .songList.length,
+                                                    (index) => GestureDetector(
+                                                          onTap: () {
+                                                            playController
+                                                                .generatePlayList(
+                                                                    catagoryController
+                                                                        .currentSongs,
+                                                                    index);
+                                                          },
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  songListController
+                                                                      .songList[
+                                                                          index]
+                                                                      .title,
+                                                                  style: TextStyle(
+                                                                      color: songListController.songList[index].id ==
+                                                                              playController
+                                                                                  .songId.value
+                                                                          ? Colors
+                                                                              .yellow
+                                                                          : Colors
+                                                                              .white),
+                                                                  textScaleFactor:
+                                                                      1.1,
+                                                                ),
+                                                                IconButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  icon: Icon(
+                                                                      Icons
+                                                                          .cancel,
+                                                                      color: songListController.songList[index].id ==
+                                                                              playController
+                                                                                  .songId.value
+                                                                          ? Colors
+                                                                              .yellow
+                                                                          : Colors
+                                                                              .white),
+                                                                )
+                                                              ]),
+                                                        )),
+                                              ),
                                             ),
                                           );
                                         });

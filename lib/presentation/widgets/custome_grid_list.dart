@@ -24,15 +24,17 @@ Widget customeGridWidget({
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 height: height,
                 width: width,
                 child: QueryArtworkWidget(
                   id: id,
-                  type: ArtworkType.ALBUM,
+                  type: ArtworkType.AUDIO,
                   nullArtworkWidget: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            MediaQuery.of(context).size.width * 0.1)),
+                        image: const DecorationImage(
                           image: AssetImage('assets/images/mic.jpg'),
                           fit: BoxFit.fitWidth,
                         ),
