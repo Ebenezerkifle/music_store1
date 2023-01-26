@@ -122,7 +122,10 @@ class AlbumTrackPage extends StatelessWidget {
 
                     playerController.playPauseHandler(album[index].id);
                   },
-                  smallDetails: [album[index].displayNameWOExt],
+                  smallDetails: [
+                    album[index].album ?? '',
+                    album[index].artist ?? ''
+                  ],
                   color: MyColors.primaryColor,
                 );
               },

@@ -31,11 +31,11 @@ class _AlbumListPageState extends State<AlbumListPage> {
       body: GetX<SongController>(
         builder: (songController) => GridView.count(
           crossAxisCount: 2,
-          crossAxisSpacing: MediaQuery.of(context).size.width * 0.01,
-          mainAxisSpacing: MediaQuery.of(context).size.width * 0.01,
+          crossAxisSpacing: MediaQuery.of(context).size.width * 0.02,
+          mainAxisSpacing: MediaQuery.of(context).size.width * 0.02,
           physics: const BouncingScrollPhysics(),
-          // padding: EdgeInsets.symmetric(
-          // horizontal: MediaQuery.of(context).size.width * 0.02),
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.02),
           children: List.generate(
             songController.albumList.length,
             (index) => customeGridWidget(
@@ -46,7 +46,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
               width: MediaQuery.of(context).size.width * 0.4,
               smallDetails: [
                 songController.albumList[index][0].artist ??
-                    songController.albumList[index].length.toString(),
+                    songController.albumList[index].toString(),
               ],
               playing: false,
               onTap: () {

@@ -7,13 +7,12 @@ import 'package:mucic_store/presentation/pages/track_list_page.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
 import 'package:get/get.dart';
-import 'package:mucic_store/presentation/widgets/custome_simple_list.dart';
 import 'package:mucic_store/services/query_songs.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../controller/player_controller.dart';
 import '../my_colors/color.dart';
-import '../widgets/play_controller_page.dart';
+import '../widgets/bottom_sheet_widget.dart';
 import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
 
@@ -113,28 +112,26 @@ class _HomePageState extends State<HomePage> {
             physics: const BouncingScrollPhysics(),
             controller: _scrollController,
             slivers: <Widget>[
-              SliverAppBar(
+              const SliverAppBar(
                 backgroundColor: Colors.black,
                 pinned: true,
-                leading: IconButton(
-                  onPressed: () {},
-                  icon: (const Icon(Icons.menu)),
-                ),
-                title: const Text(
+                title: Text(
                   "Music Store",
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textScaleFactor: 1.2,
                 ),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
+                // actions: [
+                //   IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(
+                //       Icons.search,
+                //       color: Colors.white,
+                //     ),
+                //   )
+                // ],
               ),
               SliverPersistentHeader(
                 pinned: false,
@@ -369,8 +366,10 @@ class _HomePageState extends State<HomePage> {
                                     catagoryController.currentSongs[index].id);
                               },
                               smallDetails: [
-                                catagoryController
-                                    .currentSongs[index].displayNameWOExt,
+                                catagoryController.currentSongs[index].album ??
+                                    '',
+                                catagoryController.currentSongs[index].artist ??
+                                    ''
                               ],
                               color: MyColors.primaryColor,
                               duration: Duration(
@@ -400,251 +399,115 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomSheet: Obx(
-        () => Visibility(
-          visible: playController.showList.value,
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.05,
-                vertical: MediaQuery.of(context).size.height * 0.02),
-            // color: Colors.yellow,
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.elliptical(40, 40),
-                topRight: Radius.elliptical(40, 40),
-              ),
-            ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: List.generate(
-                    songListController.songList.length,
-                    (index) => GestureDetector(
-                          onTap: () {
-                            playController.generatePlayList(
-                                catagoryController.currentSongs, index);
-                          },
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  songListController.songList[index].title,
-                                  style: TextStyle(
-                                      color: songListController
-                                                  .songList[index].id ==
-                                              playController.songId.value
-                                          ? Colors.yellow
-                                          : Colors.white),
-                                  textScaleFactor: 1.1,
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.cancel,
-                                      color: songListController
-                                                  .songList[index].id ==
-                                              playController.songId.value
-                                          ? Colors.yellow
-                                          : Colors.white),
-                                )
-                              ]),
-                        )),
-              ),
-            ),
-          ),
-        ),
-      ),
       bottomNavigationBar: Obx(
         () => Visibility(
           visible: playController.songId.value != 0,
-          child: (playController.showList.value)
-              ? GestureDetector(
-                  onTap: playController.toggleShowList,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      border: Border.all(
-                        width: 0.1,
-                        color: Colors.white,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "close",
-                        textScaleFactor: 1.2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () => Get.to(PlayingPage(
-                    songList: songListController.songList,
-                    isPlaying: true,
-                    id: playController.songId.value,
-                  )),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    height: MediaQuery.of(context).size.height * 0.09,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.black,
-                    child: Center(
-                      child:
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //  crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            Column(
+          child: GestureDetector(
+            onTap: () => Get.to(PlayingPage(
+              songList: songListController.songList,
+              isPlaying: true,
+              id: playController.songId.value,
+            )),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              height: MediaQuery.of(context).size.height * 0.09,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black,
+              child: Center(
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //  crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          QueryArtworkWidget(
+                            id: playController.songId.value,
+                            type: ArtworkType.AUDIO,
+                            nullArtworkWidget: CircleAvatar(
+                              radius: MediaQuery.of(context).size.height * 0.03,
+                              backgroundImage:
+                                  const AssetImage("assets/images/mic.jpg"),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.03,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.055,
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  playController.songTitle.value,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                Expanded(
+                                  child: Text(
+                                    playController.songTitle.value,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    textScaleFactor: 1.3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  textScaleFactor: 1.3,
                                 ),
-                                Text(
-                                  playController.songSubtitle.value,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white,
+                                Expanded(
+                                  child: Text(
+                                    playController.songSubtitle.value,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                    textScaleFactor: 0.8,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  textScaleFactor: 0.8,
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${twoDigits(playController.remaining.value.inMinutes)}:${twoDigits(playController.remaining.value.inSeconds.remainder(60))}',
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                                (playController.playing.value)
-                                    ? IconButton(
-                                        onPressed: playController.pause,
-                                        icon: const Icon(
-                                          Icons.pause_circle_filled_outlined,
-                                          color: Colors.yellow,
-                                          size: 39,
-                                        ),
-                                      )
-                                    : IconButton(
-                                        onPressed: playController.play,
-                                        icon: const Icon(
-                                          Icons.play_circle_fill_outlined,
-                                          color: Colors.yellow,
-                                          size: 39,
-                                        ),
-                                      ),
-                                IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(25.0),
-                                          ),
-                                        ),
-                                        backgroundColor:
-                                            Colors.black, // <-- SEE HERE
-                                        builder: (context) {
-                                          return Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.7,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.02,
-                                                vertical: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.07),
-                                            child: SingleChildScrollView(
-                                              physics:
-                                                  const BouncingScrollPhysics(),
-                                              child: Column(
-                                                children: List.generate(
-                                                    songListController
-                                                        .songList.length,
-                                                    (index) => GestureDetector(
-                                                          onTap: () {
-                                                            playController
-                                                                .generatePlayList(
-                                                                    catagoryController
-                                                                        .currentSongs,
-                                                                    index);
-                                                          },
-                                                          child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  songListController
-                                                                      .songList[
-                                                                          index]
-                                                                      .title,
-                                                                  style: TextStyle(
-                                                                      color: songListController.songList[index].id ==
-                                                                              playController
-                                                                                  .songId.value
-                                                                          ? Colors
-                                                                              .yellow
-                                                                          : Colors
-                                                                              .white),
-                                                                  textScaleFactor:
-                                                                      1.1,
-                                                                ),
-                                                                IconButton(
-                                                                  onPressed:
-                                                                      () {},
-                                                                  icon: Icon(
-                                                                      Icons
-                                                                          .cancel,
-                                                                      color: songListController.songList[index].id ==
-                                                                              playController
-                                                                                  .songId.value
-                                                                          ? Colors
-                                                                              .yellow
-                                                                          : Colors
-                                                                              .white),
-                                                                )
-                                                              ]),
-                                                        )),
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '${twoDigits(playController.remaining.value.inMinutes)}:${twoDigits(playController.remaining.value.inSeconds.remainder(60))}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          (playController.playing.value)
+                              ? IconButton(
+                                  onPressed: playController.pause,
                                   icon: const Icon(
-                                    Icons.playlist_play_rounded,
-                                    color: Colors.white,
+                                    Icons.pause_circle_filled_outlined,
+                                    color: Colors.yellow,
+                                    size: 39,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: playController.play,
+                                  icon: const Icon(
+                                    Icons.play_circle_fill_outlined,
+                                    color: Colors.yellow,
                                     size: 39,
                                   ),
                                 ),
-                              ],
-                            )
-                          ]),
-                    ),
-                  ),
-                ),
+                          IconButton(
+                            onPressed: () {
+                              bottomSheetWidget(
+                                  context: context,
+                                  songList: songListController.songList);
+                            },
+                            icon: const Icon(
+                              Icons.playlist_play_rounded,
+                              color: Colors.white,
+                              size: 39,
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
+              ),
+            ),
+          ),
         ),
       ),
       // bottomNavigationBar: Visibility(

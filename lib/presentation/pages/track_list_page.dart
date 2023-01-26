@@ -7,8 +7,10 @@ import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
 import 'package:get/get.dart';
 import 'package:mucic_store/services/query_songs.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../controller/player_controller.dart';
+import '../widgets/bottom_sheet_widget.dart';
 import '../widgets/silver_presistent_widget.dart';
 
 class TrackListPage extends StatefulWidget {
@@ -31,6 +33,11 @@ class _TrackListPageState extends State<TrackListPage> {
 
   final ScrollController _scrollController = ScrollController();
   late bool floatingButtonVisiblity = false;
+
+  // a function to format time in two digit form.
+  //mostly we get trouble when we have a second value lessthan 10
+  //so this function converts a single digit number to two digit if there is one.
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
 
   @override
   void initState() {
@@ -190,8 +197,8 @@ class _TrackListPageState extends State<TrackListPage> {
                                 catagoryController.currentSongs[index].id);
                           },
                           smallDetails: [
-                            catagoryController
-                                .currentSongs[index].displayNameWOExt,
+                            catagoryController.currentSongs[index].album ?? '',
+                            catagoryController.currentSongs[index].artist ?? ''
                           ],
                           color: MyColors.primaryColor,
                           duration: Duration(
@@ -216,6 +223,117 @@ class _TrackListPageState extends State<TrackListPage> {
           child: const Icon(
             Icons.keyboard_arrow_up,
             color: Colors.yellow,
+          ),
+        ),
+      ),
+      bottomNavigationBar: Obx(
+        () => Visibility(
+          visible: playerController.songId.value != 0,
+          child: GestureDetector(
+            onTap: () => Get.to(PlayingPage(
+              songList: catagoryController.currentSongs,
+              isPlaying: true,
+              id: playerController.songId.value,
+            )),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              height: MediaQuery.of(context).size.height * 0.09,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black,
+              child: Center(
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //  crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          QueryArtworkWidget(
+                            id: playerController.songId.value,
+                            type: ArtworkType.AUDIO,
+                            nullArtworkWidget: CircleAvatar(
+                              radius: MediaQuery.of(context).size.height * 0.03,
+                              backgroundImage:
+                                  const AssetImage("assets/images/mic.jpg"),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.03,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.055,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    playerController.songTitle.value,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    textScaleFactor: 1.3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    playerController.songSubtitle.value,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                    textScaleFactor: 0.8,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '${twoDigits(playerController.remaining.value.inMinutes)}:${twoDigits(playerController.remaining.value.inSeconds.remainder(60))}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          (playerController.playing.value)
+                              ? IconButton(
+                                  onPressed: playerController.pause,
+                                  icon: const Icon(
+                                    Icons.pause_circle_filled_outlined,
+                                    color: Colors.yellow,
+                                    size: 39,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: playerController.play,
+                                  icon: const Icon(
+                                    Icons.play_circle_fill_outlined,
+                                    color: Colors.yellow,
+                                    size: 39,
+                                  ),
+                                ),
+                          IconButton(
+                            onPressed: () {
+                              bottomSheetWidget(
+                                  context: context,
+                                  songList: catagoryController.currentSongs);
+                            },
+                            icon: const Icon(
+                              Icons.playlist_play_rounded,
+                              color: Colors.white,
+                              size: 39,
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
+              ),
+            ),
           ),
         ),
       ),

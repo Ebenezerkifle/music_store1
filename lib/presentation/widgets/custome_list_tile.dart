@@ -8,7 +8,7 @@ Widget customeListTile({
   required String title,
   required BuildContext context,
   required VoidCallback onTap,
-  required List<String>? smallDetails,
+  required List<String> smallDetails,
   Color? color,
   required Duration duration,
   required VoidCallback onPlayTap,
@@ -69,37 +69,38 @@ Widget customeListTile({
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Obx(
                     () => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          title,
-                          textScaleFactor: 1.2,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: (playerController.songId.value == id)
-                                ? Colors.yellow
-                                : (color != null)
-                                    ? Colors.white
-                                    : Colors.black,
+                        Expanded(
+                          child: Text(
+                            title,
+                            textScaleFactor: 1.2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: (playerController.songId.value == id)
+                                  ? Colors.yellow
+                                  : (color != null)
+                                      ? Colors.white
+                                      : Colors.black,
+                            ),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(
-                            smallDetails!.length,
-                            (index) => Text(
-                              smallDetails[index],
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: (playerController.songId.value == id)
-                                    ? Colors.yellow
-                                    : Colors.grey,
-                              ),
+                        Expanded(
+                          child: Text(
+                            '${smallDetails[0]} - ${smallDetails[1]}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: (playerController.songId.value == id)
+                                  ? Colors.yellow.shade100
+                                  : Colors.grey,
                             ),
                           ),
                         ),
@@ -127,7 +128,7 @@ Widget customeListTile({
                                 : '${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}',
                             style: TextStyle(
                               color: (playerController.songId.value == id)
-                                  ? Colors.yellow
+                                  ? Colors.yellow.shade100
                                   : Colors.grey,
                               fontWeight: FontWeight.normal,
                             )),

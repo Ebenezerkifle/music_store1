@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
+import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:mucic_store/presentation/widgets/play_controller_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,9 @@ class PlayingPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-                onPressed: playerController.toggleShowList,
+                onPressed: () {
+                  bottomSheetWidget(context: context, songList: songList);
+                },
                 icon: const Icon(Icons.list))
           ]),
       body: SafeArea(
@@ -132,38 +135,6 @@ class PlayingPage extends StatelessWidget {
                                     : Colors.white),
                           )
                         ]),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Obx(
-        () => Visibility(
-          visible: playerController.showList.value,
-          child: GestureDetector(
-            onTap: playerController.toggleShowList,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.07,
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(
-                  width: 0.1,
-                  color: Colors.white,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(10),
-                ),
-              ),
-              child: const Center(
-                child: Text(
-                  "close",
-                  textScaleFactor: 1.2,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
               ),
