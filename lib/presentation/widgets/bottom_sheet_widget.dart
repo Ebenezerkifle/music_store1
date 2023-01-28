@@ -60,15 +60,19 @@ Future<dynamic> bottomSheetWidget({
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        songList[index].title,
-                                        style: TextStyle(
-                                            color: songList[index].id ==
-                                                    playerController
-                                                        .songId.value
-                                                ? Colors.yellow
-                                                : Colors.white),
-                                        textScaleFactor: 1.1,
+                                      Expanded(
+                                        child: Text(
+                                          songList[index].title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: songList[index].id ==
+                                                      playerController
+                                                          .songId.value
+                                                  ? Colors.yellow
+                                                  : Colors.white),
+                                          textScaleFactor: 1.1,
+                                        ),
                                       ),
                                       IconButton(
                                         onPressed: () {},

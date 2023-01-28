@@ -6,6 +6,7 @@ class PlayerController extends GetxController {
   final songId = 0.obs;
   final songTitle = ''.obs;
   final songSubtitle = ''.obs;
+  final album = ''.obs;
   final playing = false.obs;
   final totalDuration = Duration.zero.obs;
   final bufferedDuration = Duration.zero.obs;
@@ -15,6 +16,7 @@ class PlayerController extends GetxController {
   late final AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _playList;
   final showList = false.obs;
+  final currentPlayList = <SongModel>[].obs;
 
   // var currentSong = SongModel.obs;
 
@@ -26,19 +28,25 @@ class PlayerController extends GetxController {
 
   loadPlayList(List<SongModel> playList) async {
     _playList = ConcatenatingAudioSource(
-        children: List.generate(
-            playList.length,
-            (index) => AudioSource.uri(Uri.parse(playList[index].uri ?? ''),
-                    tag: [
-                      playList[index].id,
-                      playList[index].title,
-                      playList[index].displayNameWOExt
-                    ])));
+      children: List.generate(
+        playList.length,
+        (index) => AudioSource.uri(
+          Uri.parse(playList[index].uri ?? ''),
+          tag: [
+            playList[index].id,
+            playList[index].title,
+            playList[index].displayNameWOExt,
+            playList[index].album,
+          ],
+        ),
+      ),
+    );
     //a method to control playing and pauseing an audio.
     //if it is playing the action should pause.
     // else it should play.
 
     _audioPlayer.setAudioSource(_playList);
+    currentPlayList(playList);
     (_playList.length > 0) ? playerListner() : null;
   }
 
@@ -80,6 +88,7 @@ class PlayerController extends GetxController {
       songId(sequenceState.currentSource!.tag[0]);
       songTitle(sequenceState.currentSource!.tag[1]);
       songSubtitle(sequenceState.currentSource!.tag[2]);
+      album(sequenceState.currentSource!.tag[3]);
       // TODO: update playlist
       // TODO: update shuffle mode
       // TODO: update previous and next buttons
@@ -91,12 +100,16 @@ class PlayerController extends GetxController {
   }
 
   void playPauseHandler(int id) {
-    if (_audioPlayer.playing) {
-      if (songId.value == id) {
-        pause();
-      } else {
-        play();
-      }
+    if (_audioPlayer.playing && songId.value == id) {
+      pause();
+    } else {
+      play();
+    }
+  }
+
+  void albumPlayPauseHandler(String albumName) {
+    if (_audioPlayer.playing && album.value == albumName) {
+      pause();
     } else {
       play();
     }

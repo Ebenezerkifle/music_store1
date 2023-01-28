@@ -4,20 +4,19 @@ import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
+import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
 import 'package:get/get.dart';
 import 'package:mucic_store/services/query_songs.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../controller/player_controller.dart';
 import '../my_colors/color.dart';
-import '../widgets/bottom_sheet_widget.dart';
 import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
 
-// homepage is the landing page for this application. on which we have a lote options
-// to choose what ever we want to choose.
+// homepage is the landing page for this application. on which we have alot options
+// to choose...hat ever we want to choose.
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -183,29 +182,32 @@ class _HomePageState extends State<HomePage> {
                                 physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 itemCount: songListController.albums.length,
-                                itemBuilder: (context, index) =>
-                                    customeGridWidget(
-                                  id: songListController.albumList[index][0].id,
-                                  context: context,
-                                  title: songListController
-                                          .albumList[index][0].album ??
-                                      '',
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  smallDetails: [
-                                    songListController
-                                            .albumList[index][0].artist ??
-                                        songListController.albumList.length
-                                            .toString(),
-                                  ],
-                                  playing: false,
-                                  onTap: () {
-                                    Get.to(() => AlbumTrackPage(
-                                        album: songListController
-                                            .albumList[index]));
-                                  },
+                                itemBuilder: (context, index) => Padding(
+                                  padding: EdgeInsets.only(
+                                      right: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  child: customeGridWidget(
+                                    id: songListController
+                                        .albumList[index][0].id,
+                                    context: context,
+                                    title: songListController
+                                            .albumList[index][0].album ??
+                                        '',
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    smallDetails: [
+                                      songListController
+                                              .albumList[index][0].artist ??
+                                          '',
+                                    ],
+                                    onTap: () {
+                                      Get.to(() => AlbumTrackPage(
+                                          album: songListController
+                                              .albumList[index]));
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -345,9 +347,23 @@ class _HomePageState extends State<HomePage> {
                               context: context,
                               id: catagoryController.currentSongs[index].id,
                               onTap: () {
+                                if (!playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.play();
+                                } else if (playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.pause();
+                                } else {
+                                  playController.generatePlayList(
+                                      catagoryController.currentSongs, index);
+                                  playController.play();
+                                }
                                 Get.to(
                                   () => PlayingPage(
-                                    songList: catagoryController.currentSongs,
                                     isPlaying: playController.isPlaying(
                                         catagoryController
                                             .currentSongs[index].id),
@@ -357,13 +373,22 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 );
                               },
-                              // onPlayTap: () {},
                               onPlayTap: () {
-                                playController.generatePlayList(
-                                    catagoryController.currentSongs, index);
-
-                                playController.playPauseHandler(
-                                    catagoryController.currentSongs[index].id);
+                                if (!playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.play();
+                                } else if (playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.pause();
+                                } else {
+                                  playController.generatePlayList(
+                                      catagoryController.currentSongs, index);
+                                  playController.play();
+                                }
                               },
                               smallDetails: [
                                 catagoryController.currentSongs[index].album ??
@@ -399,117 +424,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: Obx(
-        () => Visibility(
-          visible: playController.songId.value != 0,
-          child: GestureDetector(
-            onTap: () => Get.to(PlayingPage(
-              songList: songListController.songList,
-              isPlaying: true,
-              id: playController.songId.value,
-            )),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              height: MediaQuery.of(context).size.height * 0.09,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.black,
-              child: Center(
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //  crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          QueryArtworkWidget(
-                            id: playController.songId.value,
-                            type: ArtworkType.AUDIO,
-                            nullArtworkWidget: CircleAvatar(
-                              radius: MediaQuery.of(context).size.height * 0.03,
-                              backgroundImage:
-                                  const AssetImage("assets/images/mic.jpg"),
-                            ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.height * 0.055,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    playController.songTitle.value,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                    textScaleFactor: 1.3,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    playController.songSubtitle.value,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white,
-                                    ),
-                                    textScaleFactor: 0.8,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            '${twoDigits(playController.remaining.value.inMinutes)}:${twoDigits(playController.remaining.value.inSeconds.remainder(60))}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          (playController.playing.value)
-                              ? IconButton(
-                                  onPressed: playController.pause,
-                                  icon: const Icon(
-                                    Icons.pause_circle_filled_outlined,
-                                    color: Colors.yellow,
-                                    size: 39,
-                                  ),
-                                )
-                              : IconButton(
-                                  onPressed: playController.play,
-                                  icon: const Icon(
-                                    Icons.play_circle_fill_outlined,
-                                    color: Colors.yellow,
-                                    size: 39,
-                                  ),
-                                ),
-                          IconButton(
-                            onPressed: () {
-                              bottomSheetWidget(
-                                  context: context,
-                                  songList: songListController.songList);
-                            },
-                            icon: const Icon(
-                              Icons.playlist_play_rounded,
-                              color: Colors.white,
-                              size: 39,
-                            ),
-                          ),
-                        ],
-                      )
-                    ]),
-              ),
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar: currentSong(context: context),
       // bottomNavigationBar: Visibility(
       //   visible: bottomNavVisibility,
       //   child: Container(

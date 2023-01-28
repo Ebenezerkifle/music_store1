@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
+import 'package:mucic_store/presentation/widgets/more_option_widget.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 
@@ -132,9 +133,14 @@ Widget customeListTile({
                                   : Colors.grey,
                               fontWeight: FontWeight.normal,
                             )),
-                        const Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
+                        IconButton(
+                          onPressed: () {
+                            Get.bottomSheet(moreOptionWidget(context: context));
+                          },
+                          icon: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                          ),
                         )
                       ],
                     ),

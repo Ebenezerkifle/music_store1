@@ -13,7 +13,9 @@ Widget customeSimpleList({
       //crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.white)),
         IconButton(onPressed: onTap, icon: const Icon(Icons.cancel))
       ],
     ),

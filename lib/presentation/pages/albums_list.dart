@@ -45,10 +45,8 @@ class _AlbumListPageState extends State<AlbumListPage> {
               height: MediaQuery.of(context).size.height * 0.2,
               width: MediaQuery.of(context).size.width * 0.4,
               smallDetails: [
-                songController.albumList[index][0].artist ??
-                    songController.albumList[index].toString(),
+                songController.albumList[index][0].artist ?? '',
               ],
-              playing: false,
               onTap: () {
                 Get.to(() =>
                     AlbumTrackPage(album: songController.albumList[index]));

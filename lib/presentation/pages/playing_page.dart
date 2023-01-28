@@ -9,13 +9,11 @@ import 'package:get/get.dart';
 import '../my_colors/color.dart';
 
 class PlayingPage extends StatelessWidget {
-  final List<SongModel> songList;
   final bool isPlaying;
   final int? index;
   final int id;
   PlayingPage({
     Key? key,
-    required this.songList,
     required this.isPlaying,
     this.index,
     required this.id,
@@ -35,7 +33,9 @@ class PlayingPage extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  bottomSheetWidget(context: context, songList: songList);
+                  bottomSheetWidget(
+                      context: context,
+                      songList: playerController.currentPlayList);
                 },
                 icon: const Icon(Icons.list))
           ]),
@@ -77,7 +77,7 @@ class PlayingPage extends StatelessWidget {
                 ),
               ),
               PlayController(
-                songDetail: songList,
+                songDetail: playerController.currentPlayList,
                 isPlaying: isPlaying,
                 iconSize: 50,
                 index: index ?? 0,

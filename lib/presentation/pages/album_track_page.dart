@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
+import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import '../my_colors/color.dart';
@@ -67,30 +68,7 @@ class AlbumTrackPage extends StatelessWidget {
                           smallDetails: [
                             album[0].artist ?? album.length.toString(),
                           ],
-                          playing: false,
-                          onTap: () {
-                            // Get.to(() =>
-                            //     AlbumTrackPage(album: songController.albumList[index]));
-                          },
-                        ),
-                        Stack(
-                          alignment: AlignmentDirectional.topStart,
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.width * 0.13,
-                              width: MediaQuery.of(context).size.width * 0.13,
-                              decoration: const BoxDecoration(
-                                  color: Colors.black, shape: BoxShape.circle),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.play_circle_fill_rounded,
-                                color: Colors.white,
-                                size: 38,
-                              ),
-                            )
-                          ],
+                          onTap: () {},
                         ),
                       ],
                     ),
@@ -108,9 +86,18 @@ class AlbumTrackPage extends StatelessWidget {
                   id: album[index].id,
                   duration: Duration(milliseconds: album[index].duration ?? 0),
                   onTap: () {
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.generatePlayList(album, index);
+                      playerController.play();
+                    }
                     Get.to(
                       () => PlayingPage(
-                        songList: album,
                         isPlaying: playerController.isPlaying(album[index].id),
                         index: index,
                         id: album[index].id,
@@ -118,9 +105,16 @@ class AlbumTrackPage extends StatelessWidget {
                     );
                   },
                   onPlayTap: () {
-                    playerController.generatePlayList(album, index);
-
-                    playerController.playPauseHandler(album[index].id);
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.generatePlayList(album, index);
+                      playerController.play();
+                    }
                   },
                   smallDetails: [
                     album[index].album ?? '',
@@ -134,6 +128,7 @@ class AlbumTrackPage extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: currentSong(context: context),
     );
   }
 }
