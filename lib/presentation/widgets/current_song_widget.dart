@@ -25,7 +25,7 @@ Widget currentSong({
         )),
         child: Container(
           // padding: const EdgeInsets.symmetric(horizontal: 10),
-          height: MediaQuery.of(context).size.height * 0.11,
+          height: MediaQuery.of(context).size.height * 0.09,
           width: MediaQuery.of(context).size.width,
           color: Colors.black,
           child: Column(

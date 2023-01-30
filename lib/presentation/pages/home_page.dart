@@ -424,44 +424,67 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: currentSong(context: context),
-      // bottomNavigationBar: Visibility(
-      //   visible: bottomNavVisibility,
-      //   child: Container(
-      //     height: MediaQuery.of(context).size.height * 0.06,
-      //     width: MediaQuery.of(context).size.width,
-      //     color: Colors.black,
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //       children: [
-      //         IconButton(
-      //             onPressed: () {},
-      //             icon: const Icon(
-      //               Icons.home_filled,
-      //               color: Colors.yellow,
-      //             )),
-      //         IconButton(
-      //             onPressed: () {},
-      //             icon: const Icon(
-      //               Icons.favorite_rounded,
-      //               color: Colors.white,
-      //             )),
-      //         IconButton(
-      //             onPressed: () {},
-      //             icon: const Icon(
-      //               Icons.list,
-      //               color: Colors.white,
-      //             )),
-      //         IconButton(
-      //             onPressed: () {},
-      //             icon: const Icon(
-      //               Icons.settings,
-      //               color: Colors.white,
-      //             ))
-      //       ],
-      //     ),
-      //   ),
-      // ),
+      bottomNavigationBar: Wrap(children: [
+        currentSong(context: context),
+        Container(
+          height: 0.2,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.yellow,
+        ),
+        Visibility(
+          visible: bottomNavVisibility,
+          child: BottomNavigationBar(
+            backgroundColor: Colors.black,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.yellow,
+            unselectedItemColor: Colors.white,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_filled), label: "Home"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.library_music_outlined), label: "Library"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite), label: "Favorite"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.settings), label: "setting"),
+            ],
+          ),
+          // child: Container(
+          //   height: MediaQuery.of(context).size.height * 0.06,
+          //   width: MediaQuery.of(context).size.width,
+          //   color: Colors.black,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.home_filled,
+          //             color: Colors.yellow,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.favorite_rounded,
+          //             color: Colors.white,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.list,
+          //             color: Colors.white,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.settings,
+          //             color: Colors.white,
+          //           ))
+          //     ],
+          //   ),
+          // ),
+        ),
+      ]),
     );
   }
 }
