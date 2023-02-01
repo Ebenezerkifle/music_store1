@@ -158,11 +158,12 @@ class _LandingPageState extends State<LandingPage> {
                               itemCount: 10,
                               itemBuilder: (context, index) => customeListTile(
                                 context: context,
+                                id: 0,
                                 onTap: () {},
                                 onPlayTap: () {},
                                 smallDetails: [],
                                 title: '',
-                                playing: index == 2 ? true : false,
+                                duration: Duration.zero,
                               ),
                             ),
                           ),
@@ -291,11 +292,12 @@ class _LandingPageState extends State<LandingPage> {
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   return customeListTile(
+                      id: 0,
                       context: context,
                       smallDetails: [],
                       onTap: () {},
                       title: "Song Title",
-                      playing: index == 2 ? true : false,
+                      duration: Duration.zero,
                       onPlayTap: () {});
                 }),
               ),

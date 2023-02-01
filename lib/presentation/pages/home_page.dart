@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mucic_store/controller/song_controller.dart';
+import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
+import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:get/get.dart';
+import 'package:mucic_store/services/query_songs.dart';
 
-import '../../logic/music/music_bloc.dart';
-import '../../logic/play_controller/play_controller_bloc.dart';
+import '../../controller/player_controller.dart';
 import '../my_colors/color.dart';
-import '../widgets/play_controller_page.dart';
 import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
 
-// homepage is the landing page for this application. on which we have a lote options
-// to choose what ever we want to choose.
+// homepage is the landing page for this application. on which we have alot options
+// to choose...hat ever we want to choose.
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +28,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //The app displays a list of musics which are catagorized on different possible
   //catagories. catagoryList is a variable to store those catagories.
+
+  final catagoryController = Get.find<TrackCatagoryController>();
+  final songListController = Get.find<SongController>();
+  final playController = Get.find<PlayerController>();
+  final querySongsController = Get.find<QuerySongs>();
+
   List<String> catagoryList = [
     "All",
     "Recent",
@@ -35,7 +42,6 @@ class _HomePageState extends State<HomePage> {
 
   // active Index is a variable that stores the index value of a catagoryList above
   // so that corresponding list of musics displayed.
-  int activeIndex = 0;
 
   // ToDo this logic is not working yet!
   bool playing = false;
@@ -86,8 +92,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // a function to format time in two digit form.
+  //mostly we get trouble when we have a second value lessthan 10
+  //so this function converts a single digit number to two digit if there is one.
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
+
   @override
   Widget build(BuildContext context) {
+    catagoryController.loadAllSongs(songListController.songList);
+    catagoryController.updateIndex(catagoryController.index.value);
+
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
@@ -97,67 +111,27 @@ class _HomePageState extends State<HomePage> {
             physics: const BouncingScrollPhysics(),
             controller: _scrollController,
             slivers: <Widget>[
-              (playing)
-                  ? SliverAppBar(
-                      leading: const Icon(Icons.menu),
-                      actions: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.search),
-                          color: Colors.white,
-                        ),
-                      ],
-                      elevation: 3,
-                      pinned: false,
-                      snap: false,
-                      floating: false,
-                      expandedHeight: MediaQuery.of(context).size.height * 0.25,
-                      flexibleSpace: FlexibleSpaceBar(
-                        centerTitle: true,
-                        collapseMode: CollapseMode.pin,
-                        background: Container(
-                          padding: const EdgeInsets.only(
-                            left: 10,
-                            right: 10,
-                            top: 10,
-                          ),
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/mic.jpg'),
-                              fit: BoxFit.cover,
-                              opacity: 0.3,
-                            ),
-                          ),
-                          // Todo check the following line of code!
-                          // child: PlayController(
-                          //   songDetail: ,
-                          //   iconSize: 40),
-                        ),
-                      ),
-                    )
-                  : SliverAppBar(
-                      backgroundColor: Colors.black,
-                      pinned: true,
-                      leading: IconButton(
-                        onPressed: () {},
-                        icon: (const Icon(Icons.menu)),
-                      ),
-                      title: const Text(
-                        "Music Store",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      actions: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
+              const SliverAppBar(
+                backgroundColor: Colors.black,
+                pinned: true,
+                title: Text(
+                  "Music Store",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textScaleFactor: 1.2,
+                ),
+                // actions: [
+                //   IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(
+                //       Icons.search,
+                //       color: Colors.white,
+                //     ),
+                //   )
+                // ],
+              ),
               SliverPersistentHeader(
                 pinned: false,
                 floating: true,
@@ -186,11 +160,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AlbumListPage()));
+                                  Get.to(() => const AlbumListPage());
                                 },
                                 child: const Text(
                                   'see all',
@@ -205,28 +175,40 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Expanded(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 10,
-                              itemBuilder: (context, index) =>
-                                  customeGridWidget(
-                                context: context,
-                                title: "Album title",
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                smallDetails: ["artist name"],
-                                playing: (index == 1) ? true : false,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AlbumTrackPage()));
-                                },
+                          child: Obx(
+                            () => SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: songListController.albums.length,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: EdgeInsets.only(
+                                      right: MediaQuery.of(context).size.width *
+                                          0.05),
+                                  child: customeGridWidget(
+                                    id: songListController
+                                        .albumList[index][0].id,
+                                    context: context,
+                                    title: songListController
+                                            .albumList[index][0].album ??
+                                        '',
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    smallDetails: [
+                                      songListController
+                                              .albumList[index][0].artist ??
+                                          '',
+                                    ],
+                                    onTap: () {
+                                      Get.to(() => AlbumTrackPage(
+                                          album: songListController
+                                              .albumList[index]));
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -251,14 +233,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: ((context) =>
-                                              const TrackListPage(
-                                                  title: "Tracks")),
-                                        ),
-                                      );
+                                      Get.to(() =>
+                                          const TrackListPage(title: "Tracks"));
                                     },
                                     child: const Text(
                                       'see all',
@@ -277,26 +253,29 @@ class _HomePageState extends State<HomePage> {
                                   SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     physics: const BouncingScrollPhysics(),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: List.generate(
-                                        catagoryList.length,
-                                        (index) => Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8.0, top: 8.0, bottom: 8.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                activeIndex = index;
-                                                // TODO block needed to handle this event.
-                                              });
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5, right: 5),
-                                              decoration: BoxDecoration(
-                                                  color: (activeIndex == index)
+                                    child: Obx(
+                                      () => Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: List.generate(
+                                          catagoryList.length,
+                                          (index) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0,
+                                                top: 8.0,
+                                                bottom: 8.0),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                catagoryController
+                                                    .updateIndex(index);
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5, right: 5),
+                                                decoration: BoxDecoration(
+                                                  color: (catagoryController
+                                                              .index.value ==
+                                                          index)
                                                       ? Colors.yellow
                                                       : Colors.white
                                                           .withOpacity(0),
@@ -306,18 +285,24 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                   borderRadius:
                                                       const BorderRadius.all(
-                                                          Radius.circular(10))),
-                                              child: Text(
-                                                catagoryList[index],
-                                                textScaleFactor:
-                                                    (activeIndex == index)
-                                                        ? 1.2
-                                                        : 1.1,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: (activeIndex == index)
-                                                      ? Colors.black
-                                                      : Colors.white54,
+                                                          Radius.circular(10)),
+                                                ),
+                                                child: Text(
+                                                  catagoryList[index],
+                                                  textScaleFactor:
+                                                      (catagoryController.index
+                                                                  .value ==
+                                                              index)
+                                                          ? 1.2
+                                                          : 1.1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: (catagoryController
+                                                                .index.value ==
+                                                            index)
+                                                        ? Colors.black
+                                                        : Colors.white54,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -336,68 +321,92 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              BlocBuilder<MusicBloc, MusicState>(
-                builder: (context, state) {
-                  return (state is MusicLoadedState)
-                      ? SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return BlocBuilder<PlayControllerBloc,
-                                  PlayControllerState>(
-                                builder: (context, controllerState) {
-                                  bool isPlaying =
-                                      controllerState is PlayingState &&
-                                          controllerState.currentSong.index ==
-                                              index;
-                                  return customeListTile(
-                                    title: state.songList[index].title,
-                                    context: context,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => PlayingPage(
-                                                  song: state.songList[index],
-                                                  isPlaying: isPlaying,
-                                                )),
-                                      );
-                                    },
-                                    onPlayTap: (() {
-                                      BlocProvider.of<PlayControllerBloc>(
-                                              context)
-                                          .add((!isPlaying)
-                                              ? PlayEvent(
-                                                  song: state.songList[index],
-                                                  index: index)
-                                              : PauseEvent(
-                                                  uri: state.songList[index]
-                                                          .uri ??
-                                                      '',
-                                                ));
-                                    }),
-                                    smallDetails: [
-                                      state.songList[index].displayNameWOExt,
-                                    ],
-                                    color: MyColors.primaryColor,
-                                    playing: isPlaying,
-                                    duration: state.songList[index].duration,
-                                  );
-                                },
-                              );
-                            },
-                            childCount: state.songList.length,
+              Obx(
+                () => (catagoryController.currentSongs.isEmpty)
+                    ? SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            (catagoryController.index.value == 0)
+                                ? "There is no Song in your device"
+                                : (catagoryController.index.value == 1)
+                                    ? "No Recent Songs"
+                                    : "No Favorite Songs",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return const CircularProgressIndicator();
-                            },
-                            childCount: 5,
-                          ),
-                        );
-                },
-              ),
+                        ),
+                      )
+                    : SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return customeListTile(
+                              title:
+                                  catagoryController.currentSongs[index].title,
+                              context: context,
+                              id: catagoryController.currentSongs[index].id,
+                              onTap: () {
+                                if (!playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.play();
+                                } else if (playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.pause();
+                                } else {
+                                  playController.generatePlayList(
+                                      catagoryController.currentSongs, index);
+                                  playController.play();
+                                }
+                                Get.to(
+                                  () => PlayingPage(
+                                    isPlaying: playController.isPlaying(
+                                        catagoryController
+                                            .currentSongs[index].id),
+                                    index: index,
+                                    id: catagoryController
+                                        .currentSongs[index].id,
+                                  ),
+                                );
+                              },
+                              onPlayTap: () {
+                                if (!playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.play();
+                                } else if (playController.playing.value &&
+                                    playController.songId.value ==
+                                        catagoryController
+                                            .currentSongs[index].id) {
+                                  playController.pause();
+                                } else {
+                                  playController.generatePlayList(
+                                      catagoryController.currentSongs, index);
+                                  playController.play();
+                                }
+                              },
+                              smallDetails: [
+                                catagoryController.currentSongs[index].album ??
+                                    '',
+                                catagoryController.currentSongs[index].artist ??
+                                    ''
+                              ],
+                              color: MyColors.primaryColor,
+                              duration: Duration(
+                                  milliseconds: catagoryController
+                                          .currentSongs[index].duration ??
+                                      0),
+                            );
+                          },
+                          childCount: catagoryController.currentSongs.length,
+                        ),
+                      ),
+              )
             ],
           ),
         ),
@@ -415,43 +424,67 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: Visibility(
-        visible: bottomNavVisibility,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.06,
+      bottomNavigationBar: Wrap(children: [
+        currentSong(context: context),
+        Container(
+          height: 0.2,
           width: MediaQuery.of(context).size.width,
-          color: Colors.black,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.home_filled,
-                    color: Colors.yellow,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.list,
-                    color: Colors.white,
-                  )),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ))
+          color: Colors.yellow,
+        ),
+        Visibility(
+          visible: bottomNavVisibility,
+          child: BottomNavigationBar(
+            backgroundColor: Colors.black,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.yellow,
+            unselectedItemColor: Colors.white,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_filled), label: "Home"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.library_music_outlined), label: "Library"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite), label: "Favorite"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.settings), label: "setting"),
             ],
           ),
+          // child: Container(
+          //   height: MediaQuery.of(context).size.height * 0.06,
+          //   width: MediaQuery.of(context).size.width,
+          //   color: Colors.black,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.home_filled,
+          //             color: Colors.yellow,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.favorite_rounded,
+          //             color: Colors.white,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.list,
+          //             color: Colors.white,
+          //           )),
+          //       IconButton(
+          //           onPressed: () {},
+          //           icon: const Icon(
+          //             Icons.settings,
+          //             color: Colors.white,
+          //           ))
+          //     ],
+          //   ),
+          // ),
         ),
-      ),
+      ]),
     );
   }
 }

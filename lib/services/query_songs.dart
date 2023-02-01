@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class QuerySongs {
   late final OnAudioQuery audioQuery;
-  late final AudioPlayer audioPlayer;
+  late List<SongModel> songList;
 
   QuerySongs() {
     audioQuery = OnAudioQuery();
-    audioPlayer = AudioPlayer();
   }
 
   void requestStoragePermission() async {
@@ -29,27 +27,23 @@ class QuerySongs {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
+    this.songList = songList;
     return songList;
   }
 
-  Future<List<AlbumModel>> getListOfAlbums() async {
-    List<AlbumModel> albumList;
-    albumList = await audioQuery.queryAlbums(
-      orderType: OrderType.DESC_OR_GREATER,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
-    );
-    return albumList;
-  }
-
-  void playSong(String? uri) {
-    // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    audioPlayer.play();
-    // audioPlayer.onPlayerStateChanged;
-  }
-
-  void pauseSong() {
-    //audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    audioPlayer.pause();
+  Map<String, List<SongModel>> getAlbumList() {
+    Map<String, List<SongModel>> albums = {};
+    for (var song in songList) {
+      List<SongModel> songList = [];
+      String albumName = song.album ?? "Unknow";
+      if (albums.containsKey(albumName)) {
+        songList = albums[albumName] ?? [];
+        songList.add(song);
+        albums.update(albumName, (value) => songList);
+      } else {
+        albums[albumName] = [song];
+      }
+    }
+    return albums;
   }
 }

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+import 'package:mucic_store/controller/player_controller.dart';
+import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
+import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 import '../my_colors/color.dart';
+import '../widgets/custome_grid_list.dart';
 import '../widgets/custome_list_tile.dart';
 import '../widgets/silver_presistent_widget.dart';
+import 'package:get/get.dart';
 
 class AlbumTrackPage extends StatelessWidget {
-  AlbumTrackPage({Key? key}) : super(key: key);
+  final List<SongModel> album;
+  AlbumTrackPage({Key? key, required this.album}) : super(key: key);
 
-  List<String> albumDetail = [
-    "Album Title",
-    "artist name",
-    "12 tracks",
-    "Dec 20, 2022",
-  ];
+  final songController = Get.find<SongController>();
+  final playerController = Get.find<PlayerController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
-        title: const Text(
-          "Album Title",
-          style: TextStyle(
+        title: Text(
+          album[0].album.toString(),
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -45,7 +47,7 @@ class AlbumTrackPage extends StatelessWidget {
             pinned: false,
             floating: true,
             delegate: PersistentHeader(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.33,
               color: Colors.black,
               context: context,
               widget: Container(
@@ -57,55 +59,19 @@ class AlbumTrackPage extends StatelessWidget {
                     Stack(
                       alignment: AlignmentDirectional.bottomEnd,
                       children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                        customeGridWidget(
+                          id: album[0].id,
+                          context: context,
+                          title: album[0].album.toString(),
+                          height: MediaQuery.of(context).size.height * 0.23,
                           width: MediaQuery.of(context).size.width * 0.4,
-                          // color: Colors.white,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/mic.jpg"),
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
-                        Stack(
-                          alignment: AlignmentDirectional.topStart,
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.width * 0.13,
-                              width: MediaQuery.of(context).size.width * 0.13,
-                              decoration: const BoxDecoration(
-                                  color: Colors.black, shape: BoxShape.circle),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.play_circle_fill_rounded,
-                                color: Colors.white,
-                                size: 38,
-                              ),
-                            )
+                          smallDetails: [
+                            album[0].artist ?? album.length.toString(),
                           ],
+                          onTap: () {},
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: List.generate(
-                        albumDetail.length,
-                        (index) => Text(
-                          albumDetail[index],
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textScaleFactor: (5 - index) * 0.3,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -115,26 +81,54 @@ class AlbumTrackPage extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return customeListTile(
-                  title: "Song title",
+                  title: album[index].title,
                   context: context,
+                  id: album[index].id,
+                  duration: Duration(milliseconds: album[index].duration ?? 0),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const PlayingPage()),
-                    // );
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.generatePlayList(album, index);
+                      playerController.play();
+                    }
+                    Get.to(
+                      () => PlayingPage(
+                        isPlaying: playerController.isPlaying(album[index].id),
+                        index: index,
+                        id: album[index].id,
+                      ),
+                    );
                   },
-                  onPlayTap: () {},
-                  smallDetails: ['subtitle of the song'],
+                  onPlayTap: () {
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.generatePlayList(album, index);
+                      playerController.play();
+                    }
+                  },
+                  smallDetails: [
+                    album[index].album ?? '',
+                    album[index].artist ?? ''
+                  ],
                   color: MyColors.primaryColor,
-                  playing: (index == 2) ? true : false,
                 );
               },
-              childCount: 12,
+              childCount: album.length,
             ),
           ),
         ],
       ),
+      bottomNavigationBar: currentSong(context: context),
     );
   }
 }
