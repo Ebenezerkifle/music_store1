@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class QuerySongs {
@@ -32,7 +31,6 @@ class QuerySongs {
     return songList;
   }
 
-  // TODO album list should work well!!
   Map<String, List<SongModel>> getAlbumList() {
     Map<String, List<SongModel>> albums = {};
     for (var song in songList) {
@@ -47,15 +45,5 @@ class QuerySongs {
       }
     }
     return albums;
-  }
-
-  Future<List<AlbumModel>> getListOfAlbums() async {
-    List<AlbumModel> albumList;
-    albumList = await audioQuery.queryAlbums(
-      orderType: OrderType.DESC_OR_GREATER,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
-    );
-    return albumList;
   }
 }

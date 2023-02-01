@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mucic_store/controller/song_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+
+import '../models/music_model.dart';
 
 class PlayerController extends GetxController {
   final songId = 0.obs;
@@ -17,6 +20,8 @@ class PlayerController extends GetxController {
   late ConcatenatingAudioSource _playList;
   final showList = false.obs;
   final currentPlayList = <SongModel>[].obs;
+  final songUri = ''.obs;
+  final artist = ''.obs;
 
   // var currentSong = SongModel.obs;
 
@@ -37,6 +42,8 @@ class PlayerController extends GetxController {
             playList[index].title,
             playList[index].displayNameWOExt,
             playList[index].album,
+            playList[index].uri,
+            playList[index].artist,
           ],
         ),
       ),
@@ -89,6 +96,7 @@ class PlayerController extends GetxController {
       songTitle(sequenceState.currentSource!.tag[1]);
       songSubtitle(sequenceState.currentSource!.tag[2]);
       album(sequenceState.currentSource!.tag[3]);
+      songUri(sequenceState.currentSource!.tag[4]);
       // TODO: update playlist
       // TODO: update shuffle mode
       // TODO: update previous and next buttons
@@ -119,8 +127,22 @@ class PlayerController extends GetxController {
     _audioPlayer.pause();
   }
 
+  final songController = Get.find<SongController>();
   void play() {
     _audioPlayer.play();
+
+    // Todo check if there is a recent playlist not only being empty
+    // Todo every time when play button is clicked it should update the recent items.
+    // songController.addToPlayList(
+    //     "Recent",
+    //     Music(
+    //       album: album.value,
+    //       id: songId.value,
+    //       duration: totalDuration.value.inMilliseconds,
+    //       uri: songUri.value,
+    //       title: songTitle.value,
+    //       artist: artist.value,
+    //     ));
   }
 
   void onPreviousButtonclick() {

@@ -99,9 +99,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //loading a default playlist.
     catagoryController.loadAllSongs(songListController.songList);
     catagoryController.updateIndex(catagoryController.index.value);
+
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
