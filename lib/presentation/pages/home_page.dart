@@ -55,28 +55,29 @@ class _HomePageState extends State<HomePage> {
   // we want this controller to help us decide if the floating button and bottom navigation bar
   // has to be hidden or not.
   final ScrollController _scrollController = ScrollController();
+  // var controller = ScrollController.obs;
 
   //init state calls the listener as soon as the app starts, to get the information about
   // the scrolling.
-  @override
-  void initState() {
-    _scrollController.addListener(() {
-      //scroll listener
-      double showoffset = 40.0;
-      //Back to top button(floating action button) will show on scroll offset 40.0
-      //Bottom Navigation button will get hide on scroll offset 40.0.
-      if (_scrollController.offset > showoffset) {
-        floatingButtonVisiblity = true;
-        bottomNavVisibility = false;
-        setState(() {});
-      } else {
-        floatingButtonVisiblity = false;
-        bottomNavVisibility = true;
-        setState(() {});
-      }
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _scrollController.addListener(() {
+  //     //scroll listener
+  //     double showoffset = 40.0;
+  //     //Back to top button(floating action button) will show on scroll offset 40.0
+  //     //Bottom Navigation button will get hide on scroll offset 40.0.
+  //     if (_scrollController.offset > showoffset) {
+  //       floatingButtonVisiblity = true;
+  //       bottomNavVisibility = false;
+  //       setState(() {});
+  //     } else {
+  //       floatingButtonVisiblity = false;
+  //       bottomNavVisibility = true;
+  //       setState(() {});
+  //     }
+  //   });
+  //   super.initState();
+  // }
 
   void scrollToTop() {
     // a method to bring the top element of a scrollable widget.
