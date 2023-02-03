@@ -426,7 +426,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: Wrap(children: [
-        currentSong(context: context),
+        Obx(
+          () => Visibility(
+              visible: playController.songId.value != 0,
+              child: currentSong(context: context)),
+        ),
         Container(
           height: 0.2,
           width: MediaQuery.of(context).size.width,

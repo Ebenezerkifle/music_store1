@@ -40,23 +40,23 @@ class _TrackListPageState extends State<TrackListPage> {
   //so this function converts a single digit number to two digit if there is one.
   String twoDigits(int n) => n.toString().padLeft(2, "0");
 
-  @override
-  void initState() {
-    _scrollController.addListener(() {
-      //scroll listener
+  // @override
+  // void initState() {
+  //   _scrollController.addListener(() {
+  //     //scroll listener
 
-      double showoffset = 40.0;
-      //Back to top botton will show on scroll offset 40.0
-      if (_scrollController.offset > showoffset) {
-        floatingButtonVisiblity = true;
-        setState(() {});
-      } else {
-        floatingButtonVisiblity = false;
-        setState(() {});
-      }
-    });
-    super.initState();
-  }
+  //     double showoffset = 40.0;
+  //     //Back to top botton will show on scroll offset 40.0
+  //     if (_scrollController.offset > showoffset) {
+  //       floatingButtonVisiblity = true;
+  //       setState(() {});
+  //     } else {
+  //       floatingButtonVisiblity = false;
+  //       setState(() {});
+  //     }
+  //   });
+  //   super.initState();
+  // }
 
   void scrollToTop() {
     // a method to bring the top element of a scrollable widget.
