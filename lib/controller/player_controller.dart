@@ -3,8 +3,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-import '../models/music_model.dart';
-
 class PlayerController extends GetxController {
   final songId = 0.obs;
   final songTitle = ''.obs;

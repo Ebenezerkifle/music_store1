@@ -59,7 +59,7 @@ class _PlayControllerState extends State<PlayController> {
             timeLabelLocation: TimeLabelLocation.below,
             timeLabelTextStyle: const TextStyle(color: Colors.white),
             timeLabelType: TimeLabelType.totalTime,
-            // onSeek: playerController.seek,
+            onSeek: playerController.seek,
           ),
           // : ProgressBar(
           //     progress: Duration.zero,
