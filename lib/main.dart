@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/controller/track_catagory_controller.dart';
@@ -21,19 +20,18 @@ class MyApp extends StatelessWidget {
     Get.put(SongController());
     Get.put(PlayerController([]));
     Get.put(QuerySongs());
-    return RepositoryProvider(
-      create: (context) => QuerySongs(),
-      child: GetMaterialApp(
-        title: 'Music Store',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: MyColors.primaryColor,
-        ),
-        initialRoute: "/",
-        getPages: [
-          GetPage(name: "/", page: (() => const HomePage())),
-        ],
+
+    return GetMaterialApp(
+      title: 'Music Store',
+      debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.downToUp,
+      theme: ThemeData(
+        primarySwatch: MyColors.primaryColor,
       ),
+      initialRoute: "/",
+      getPages: [
+        GetPage(name: "/", page: (() => const HomePage())),
+      ],
     );
   }
 }
