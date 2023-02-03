@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "E:\\Abeni File\\Flutter Projects\\music_store\\build\\audio_session\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_pause.png",
+        "source": "C:\\Users\\No Name\\.gradle\\caches\\transforms-3\\aa7263188b29434019ae8934cbefd4da\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_pause.png"
+    },
+    {
+        "merged": "E:\\Abeni File\\Flutter Projects\\music_store\\build\\audio_session\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_play.png",
+        "source": "C:\\Users\\No Name\\.gradle\\caches\\transforms-3\\aa7263188b29434019ae8934cbefd4da\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_play.png"
+    },
+    {
+        "merged": "E:\\Abeni File\\Flutter Projects\\music_store\\build\\audio_session\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_previous.png",
+        "source": "C:\\Users\\No Name\\.gradle\\caches\\transforms-3\\aa7263188b29434019ae8934cbefd4da\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_previous.png"
+    },
+    {
+        "merged": "E:\\Abeni File\\Flutter Projects\\music_store\\build\\audio_session\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_music_note.png",
+        "source": "C:\\Users\\No Name\\.gradle\\caches\\transforms-3\\aa7263188b29434019ae8934cbefd4da\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_music_note.png"
+    },
+    {
+        "merged": "E:\\Abeni File\\Flutter Projects\\music_store\\build\\audio_session\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_next.png",
+        "source": "C:\\Users\\No Name\\.gradle\\caches\\transforms-3\\aa7263188b29434019ae8934cbefd4da\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_next.png"
+    }
+]

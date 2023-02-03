@@ -5,7 +5,6 @@ import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/home_page.dart';
 import 'package:mucic_store/services/query_songs.dart';
-import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
