@@ -1,0 +1,120 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.mucic_store"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+8-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+11-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:3:7-81
+11-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:3:24-79
+12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+12-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:4:9-84
+12-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:4:26-82
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->[com.google.android.exoplayer:exoplayer-core:2.18.1] C:\Users\No Name\.gradle\caches\transforms-3\6ec2c823b2ddfa9d4aff16fd99b56b89\transformed\jetified-exoplayer-core-2.18.1\AndroidManifest.xml:24:5-79
+13-->[com.google.android.exoplayer:exoplayer-core:2.18.1] C:\Users\No Name\.gradle\caches\transforms-3\6ec2c823b2ddfa9d4aff16fd99b56b89\transformed\jetified-exoplayer-core-2.18.1\AndroidManifest.xml:24:22-76
+14
+15    <queries>
+15-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:24:5-34:15
+16        <intent>
+16-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:25:9-27:18
+17            <action android:name="android.media.browse.MediaBrowserService" />
+17-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:26:13-79
+17-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:26:21-76
+18        </intent>
+19        <intent>
+19-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:28:9-30:18
+20            <action android:name="androidx.media2.session.MediaSessionService" />
+20-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:29:13-82
+20-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:29:21-79
+21        </intent>
+22        <intent>
+22-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:31:9-33:18
+23            <action android:name="androidx.media2.session.MediaLibraryService" />
+23-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:32:13-82
+23-->[androidx.media2:media2-session:1.2.0] C:\Users\No Name\.gradle\caches\transforms-3\aa7263188b29434019ae8934cbefd4da\transformed\jetified-media2-session-1.2.0\AndroidManifest.xml:32:21-79
+24        </intent>
+25    </queries>
+26
+27    <application
+28        android:name="io.flutter.app.FlutterMultiDexApplication"
+28-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:8:9-42
+29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+29-->[androidx.core:core:1.7.0] C:\Users\No Name\.gradle\caches\transforms-3\5e083c06c9925c2309f02468fc66e376\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+30        android:icon="@mipmap/ic_launcher"
+30-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:9:9-43
+31        android:label="mucic_store" >
+31-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:7:9-36
+32        <activity
+32-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:10:9-30:20
+33            android:name="com.example.mucic_store.MainActivity"
+33-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:11:13-41
+34            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+34-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:15:13-163
+35            android:exported="true"
+35-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:12:13-36
+36            android:hardwareAccelerated="true"
+36-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:16:13-47
+37            android:launchMode="singleTop"
+37-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:13:13-43
+38            android:theme="@style/LaunchTheme"
+38-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:14:13-47
+39            android:windowSoftInputMode="adjustResize" >
+39-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:17:13-55
+40
+41            <!--
+42                 Specifies an Android theme to apply to this Activity as soon as
+43                 the Android process has started. This theme is visible to the user
+44                 while the Flutter UI initializes. After that, this theme continues
+45                 to determine the Window background behind the Flutter UI.
+46            -->
+47            <meta-data
+47-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:22:13-25:17
+48                android:name="io.flutter.embedding.android.NormalTheme"
+48-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:23:15-70
+49                android:resource="@style/NormalTheme" />
+49-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:24:15-52
+50
+51            <intent-filter>
+51-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:26:13-29:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:27:17-68
+52-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:27:25-66
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:28:17-76
+54-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:28:27-74
+55            </intent-filter>
+56        </activity>
+57        <!--
+58             Don't delete the meta-data below.
+59             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+60        -->
+61        <meta-data
+61-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:33:9-35:33
+62            android:name="flutterEmbedding"
+62-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:34:13-44
+63            android:value="2" />
+63-->E:\Abeni File\Flutter Projects\music_store\android\app\src\main\AndroidManifest.xml:35:13-30
+64
+65        <uses-library
+65-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+66            android:name="androidx.window.extensions"
+66-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+67            android:required="false" />
+67-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+68        <uses-library
+68-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+69            android:name="androidx.window.sidecar"
+69-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
+70            android:required="false" />
+70-->[androidx.window:window:1.0.0-beta04] C:\Users\No Name\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+71    </application>
+72
+73</manifest>
