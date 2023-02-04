@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
 import 'package:get/get.dart';
 import 'package:mucic_store/services/query_songs.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../controller/player_controller.dart';
-import '../widgets/bottom_sheet_widget.dart';
 import '../widgets/silver_presistent_widget.dart';
 
 class TrackListPage extends StatefulWidget {
@@ -28,7 +26,7 @@ class _TrackListPageState extends State<TrackListPage> {
     "Recent",
     "Favorite",
   ];
-  final catagoryController = Get.find<TrackCatagoryController>();
+  final playListController = Get.find<PlayListController>();
   final playerController = Get.find<PlayerController>();
   final querySongController = Get.find<QuerySongs>();
 
@@ -111,13 +109,13 @@ class _TrackListPageState extends State<TrackListPage> {
                                     left: 8.0, top: 4.0, bottom: 4.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    catagoryController.updateIndex(index);
+                                    playListController.updateIndex(index);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
                                         left: 5, right: 5),
                                     decoration: BoxDecoration(
-                                      color: (catagoryController.index.value ==
+                                      color: (playListController.index.value ==
                                               index)
                                           ? Colors.yellow
                                           : Colors.white.withOpacity(0),
@@ -131,14 +129,14 @@ class _TrackListPageState extends State<TrackListPage> {
                                     child: Text(
                                       catagoryList[index],
                                       textScaleFactor:
-                                          (catagoryController.index.value ==
+                                          (playListController.index.value ==
                                                   index)
                                               ? 1.2
                                               : 1.1,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color:
-                                            (catagoryController.index.value ==
+                                            (playListController.index.value ==
                                                     index)
                                                 ? Colors.black
                                                 : Colors.white54,
@@ -157,13 +155,13 @@ class _TrackListPageState extends State<TrackListPage> {
               ),
             ),
             Obx(
-              () => (catagoryController.currentSongs.isEmpty)
+              () => (playListController.currentSongs.isEmpty)
                   ? SliverFillRemaining(
                       child: Center(
                         child: Text(
-                          (catagoryController.index.value == 0)
+                          (playListController.index.value == 0)
                               ? "There is no Song in your device"
-                              : (catagoryController.index.value == 1)
+                              : (playListController.index.value == 1)
                                   ? "No Recent Songs"
                                   : "No Favorite Songs",
                           style: const TextStyle(
@@ -177,66 +175,63 @@ class _TrackListPageState extends State<TrackListPage> {
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return customeListTile(
-                            title: catagoryController.currentSongs[index].title,
+                            title: playListController.currentSongs[index].title,
                             context: context,
-                            id: catagoryController.currentSongs[index].id,
+                            id: playListController.currentSongs[index].id,
                             onTap: () {
                               if (!playerController.playing.value &&
                                   playerController.songId.value ==
-                                      catagoryController
+                                      playListController
                                           .currentSongs[index].id) {
                                 playerController.play();
                               } else if (playerController.playing.value &&
                                   playerController.songId.value ==
-                                      catagoryController
+                                      playListController
                                           .currentSongs[index].id) {
-                                playerController.pause();
+                                // playerController.pause();
                               } else {
                                 playerController.generatePlayList(
-                                    catagoryController.currentSongs, index);
+                                    playListController.currentSongs, index);
                                 playerController.play();
                               }
                               Get.to(
                                 () => PlayingPage(
                                   isPlaying: playerController.isPlaying(
-                                      catagoryController
+                                      playListController
                                           .currentSongs[index].id),
                                   index: index,
-                                  id: catagoryController.currentSongs[index].id,
+                                  id: playListController.currentSongs[index].id,
                                 ),
                               );
                             },
                             onPlayTap: () {
                               if (!playerController.playing.value &&
                                   playerController.songId.value ==
-                                      catagoryController
+                                      playListController
                                           .currentSongs[index].id) {
                                 playerController.play();
                               } else if (playerController.playing.value &&
                                   playerController.songId.value ==
-                                      catagoryController
+                                      playListController
                                           .currentSongs[index].id) {
                                 playerController.pause();
                               } else {
                                 playerController.generatePlayList(
-                                    catagoryController.currentSongs, index);
+                                    playListController.currentSongs, index);
                                 playerController.play();
                               }
                             },
                             smallDetails: [
-                              catagoryController.currentSongs[index].album ??
-                                  '',
-                              catagoryController.currentSongs[index].artist ??
-                                  ''
+                              playListController.currentSongs[index].album,
+                              playListController.currentSongs[index].artist,
                             ],
                             color: MyColors.primaryColor,
                             duration: Duration(
-                                milliseconds: catagoryController
-                                        .currentSongs[index].duration ??
-                                    0),
+                                milliseconds: playListController
+                                    .currentSongs[index].duration),
                           );
                         },
-                        childCount: catagoryController.currentSongs.length,
+                        childCount: playListController.currentSongs.length,
                       ),
                     ),
             )
@@ -255,6 +250,10 @@ class _TrackListPageState extends State<TrackListPage> {
             ),
           ),
         ),
-        bottomNavigationBar: currentSong(context: context));
+        bottomNavigationBar: Obx(
+          () => Visibility(
+              visible: playerController.playing.value,
+              child: currentSong(context: context)),
+        ));
   }
 }

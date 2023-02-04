@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
+import '../models/music_model.dart';
+
 class QuerySongs {
   late final OnAudioQuery audioQuery;
-  late List<SongModel> songList;
+  late List<Music> musicList;
 
   QuerySongs() {
     audioQuery = OnAudioQuery();
@@ -19,7 +21,7 @@ class QuerySongs {
     }
   }
 
-  Future<List<SongModel>> getListOfSongs() async {
+  Future<List<Music>> getListOfSongs() async {
     List<SongModel> songList;
     songList = await audioQuery.querySongs(
       sortType: null,
@@ -27,15 +29,29 @@ class QuerySongs {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
-    this.songList = songList;
-    return songList;
+    List<Music> musicList = [];
+    for (SongModel song in songList) {
+      musicList.add(
+        Music(
+          album: song.album ?? '',
+          duration: song.duration ?? 0,
+          title: song.title,
+          uri: song.uri ?? '',
+          id: song.id,
+          artist: song.artist ?? '',
+          displayNameWOExt: song.displayNameWOExt,
+        ),
+      );
+    }
+    this.musicList = musicList;
+    return musicList;
   }
 
-  Map<String, List<SongModel>> getAlbumList() {
-    Map<String, List<SongModel>> albums = {};
-    for (var song in songList) {
-      List<SongModel> songList = [];
-      String albumName = song.album ?? "Unknow";
+  Map<String, List<Music>> getAlbumList() {
+    Map<String, List<Music>> albums = {};
+    for (var song in musicList) {
+      List<Music> songList = [];
+      String albumName = song.album;
       if (albums.containsKey(albumName)) {
         songList = albums[albumName] ?? [];
         songList.add(song);

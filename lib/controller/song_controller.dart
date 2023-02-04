@@ -1,16 +1,14 @@
 import 'package:get/get.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
 import 'package:mucic_store/services/query_songs.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SongController extends GetxController {
-  final songList = <SongModel>[].obs;
+  final songList = <Music>[].obs;
   final songsLoading = true.obs;
   final songsLoaded = false.obs;
-  final albumList = <List<SongModel>>[].obs;
-  final albums = <String, List<SongModel>>{}.obs;
+  final albumList = <List<Music>>[].obs;
+  final albums = <String, List<Music>>{}.obs;
   final playList = <Music>[].obs; // recent playlist
   static late SharedPreferences pref;
 
@@ -34,7 +32,7 @@ class SongController extends GetxController {
 
   updateAlbumList() {
     List<String> keys = [...albums.keys];
-    List<List<SongModel>> albumsList1 = [];
+    List<List<Music>> albumsList1 = [];
     for (var key in keys) {
       albumsList1.add(albums[key] ?? []);
     }

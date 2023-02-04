@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/home_page.dart';
 import 'package:mucic_store/services/query_songs.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(TrackCatagoryController());
+    Get.put(PlayListController());
     Get.put(SongController());
     Get.put(PlayerController([]));
     Get.put(QuerySongs());

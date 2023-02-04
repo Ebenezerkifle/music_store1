@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   //The app displays a list of musics which are catagorized on different possible
   //catagories. catagoryList is a variable to store those catagories.
 
-  final catagoryController = Get.find<TrackCatagoryController>();
+  final playListController = Get.find<PlayListController>();
   final songListController = Get.find<SongController>();
   final playController = Get.find<PlayerController>();
   final querySongsController = Get.find<QuerySongs>();
@@ -100,8 +100,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    catagoryController.loadAllSongs(songListController.songList);
-    catagoryController.updateIndex(catagoryController.index.value);
+    playListController.loadAllSongs(songListController.songList);
+    playListController.updateIndex(playListController.index.value);
 
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
@@ -192,16 +192,14 @@ class _HomePageState extends State<HomePage> {
                                         .albumList[index][0].id,
                                     context: context,
                                     title: songListController
-                                            .albumList[index][0].album ??
-                                        '',
+                                        .albumList[index][0].album,
                                     height: MediaQuery.of(context).size.height *
                                         0.2,
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
                                     smallDetails: [
                                       songListController
-                                              .albumList[index][0].artist ??
-                                          '',
+                                          .albumList[index][0].artist,
                                     ],
                                     onTap: () {
                                       Get.to(() => AlbumTrackPage(
@@ -267,14 +265,14 @@ class _HomePageState extends State<HomePage> {
                                                 bottom: 8.0),
                                             child: GestureDetector(
                                               onTap: () {
-                                                catagoryController
+                                                playListController
                                                     .updateIndex(index);
                                               },
                                               child: Container(
                                                 padding: const EdgeInsets.only(
                                                     left: 5, right: 5),
                                                 decoration: BoxDecoration(
-                                                  color: (catagoryController
+                                                  color: (playListController
                                                               .index.value ==
                                                           index)
                                                       ? Colors.yellow
@@ -291,14 +289,14 @@ class _HomePageState extends State<HomePage> {
                                                 child: Text(
                                                   catagoryList[index],
                                                   textScaleFactor:
-                                                      (catagoryController.index
+                                                      (playListController.index
                                                                   .value ==
                                                               index)
                                                           ? 1.2
                                                           : 1.1,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: (catagoryController
+                                                    color: (playListController
                                                                 .index.value ==
                                                             index)
                                                         ? Colors.black
@@ -323,13 +321,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Obx(
-                () => (catagoryController.currentSongs.isEmpty)
+                () => (playListController.currentSongs.isEmpty)
                     ? SliverFillRemaining(
                         child: Center(
                           child: Text(
-                            (catagoryController.index.value == 0)
+                            (playListController.index.value == 0)
                                 ? "There is no Song in your device"
-                                : (catagoryController.index.value == 1)
+                                : (playListController.index.value == 1)
                                     ? "No Recent Songs"
                                     : "No Favorite Songs",
                             style: const TextStyle(
@@ -344,32 +342,32 @@ class _HomePageState extends State<HomePage> {
                           (BuildContext context, int index) {
                             return customeListTile(
                               title:
-                                  catagoryController.currentSongs[index].title,
+                                  playListController.currentSongs[index].title,
                               context: context,
-                              id: catagoryController.currentSongs[index].id,
+                              id: playListController.currentSongs[index].id,
                               onTap: () {
                                 if (!playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.play();
                                 } else if (playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
-                                  playController.pause();
+                                  // playController.pause();
                                 } else {
                                   playController.generatePlayList(
-                                      catagoryController.currentSongs, index);
+                                      playListController.currentSongs, index);
                                   playController.play();
                                 }
                                 Get.to(
                                   () => PlayingPage(
                                     isPlaying: playController.isPlaying(
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id),
                                     index: index,
-                                    id: catagoryController
+                                    id: playListController
                                         .currentSongs[index].id,
                                   ),
                                 );
@@ -377,34 +375,31 @@ class _HomePageState extends State<HomePage> {
                               onPlayTap: () {
                                 if (!playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.play();
                                 } else if (playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.pause();
                                 } else {
                                   playController.generatePlayList(
-                                      catagoryController.currentSongs, index);
+                                      playListController.currentSongs, index);
                                   playController.play();
                                 }
                               },
                               smallDetails: [
-                                catagoryController.currentSongs[index].album ??
-                                    '',
-                                catagoryController.currentSongs[index].artist ??
-                                    ''
+                                playListController.currentSongs[index].album,
+                                playListController.currentSongs[index].artist,
                               ],
                               color: MyColors.primaryColor,
                               duration: Duration(
-                                  milliseconds: catagoryController
-                                          .currentSongs[index].duration ??
-                                      0),
+                                  milliseconds: playListController
+                                      .currentSongs[index].duration),
                             );
                           },
-                          childCount: catagoryController.currentSongs.length,
+                          childCount: playListController.currentSongs.length,
                         ),
                       ),
               )
@@ -429,7 +424,9 @@ class _HomePageState extends State<HomePage> {
         Obx(
           () => Visibility(
               visible: playController.songId.value != 0,
-              child: currentSong(context: context)),
+              child: (playController.songId.value != 0)
+                  ? currentSong(context: context)
+                  : Container()),
         ),
         Container(
           height: 0.2,

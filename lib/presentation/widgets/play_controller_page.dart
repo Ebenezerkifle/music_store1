@@ -2,15 +2,15 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mucic_store/controller/player_controller.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:mucic_store/models/music_model.dart';
 
 class PlayController extends StatefulWidget {
   final double iconSize;
-  final List<SongModel> songDetail;
+  final List<Music> songDetail;
   final bool isPlaying;
   final int index;
   final int id;
-  PlayController({
+  const PlayController({
     Key? key,
     required this.iconSize,
     required this.songDetail,

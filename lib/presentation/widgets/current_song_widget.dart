@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
+import 'package:mucic_store/models/music_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../controller/player_controller.dart';
@@ -10,6 +12,18 @@ Widget currentSong({
   required BuildContext context,
 }) {
   final playController = Get.find<PlayerController>();
+  final playListController = Get.find<PlayListController>();
+  playListController.addToRecentPlayList(
+    Music(
+      album: playController.album.value,
+      duration: playController.totalDuration.value.inMilliseconds,
+      title: playController.songTitle.value,
+      uri: playController.songUri.value,
+      id: playController.songId.value,
+      artist: playController.artist.value,
+      displayNameWOExt: playController.songSubtitle.value,
+    ),
+  );
 
   // a function to format time in two digit form.
   //mostly we get trouble when we have a second value lessthan 10

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:mucic_store/models/music_model.dart';
 
 import 'package:mucic_store/controller/player_controller.dart';
 
 Future<dynamic> bottomSheetWidget({
   required BuildContext context,
-  required List<SongModel> songList,
+  required List<Music> songList,
 }) {
   final playerController = Get.find<PlayerController>();
   return showModalBottomSheet(
