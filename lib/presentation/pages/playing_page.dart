@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
+import 'package:mucic_store/presentation/widgets/more_option_widget.dart';
 import 'package:mucic_store/presentation/widgets/play_controller_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
@@ -32,12 +32,11 @@ class PlayingPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-                onPressed: () {
-                  bottomSheetWidget(
-                      context: context,
-                      songList: playerController.currentPlayList);
-                },
-                icon: const Icon(Icons.list))
+              onPressed: () {
+                // Get.bottomSheet(moreOption(context: context, music: music));
+              },
+              icon: const Icon(Icons.more_vert),
+            )
           ]),
       body: SafeArea(
         child: Container(
@@ -79,7 +78,6 @@ class PlayingPage extends StatelessWidget {
               PlayController(
                 songDetail: playerController.currentPlayList,
                 isPlaying: isPlaying,
-                iconSize: 50,
                 index: index ?? 0,
                 id: id,
               ),

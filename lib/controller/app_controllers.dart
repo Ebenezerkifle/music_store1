@@ -11,7 +11,7 @@ class AppControllers extends Bindings {
     Get.lazyPut<QuerySongs>(() => QuerySongs());
     Get.lazyPut<SongController>(() => SongController());
     Get.lazyPut<PlayListController>(() => PlayListController());
-    Get.lazyPut<PlayerController>(() => PlayerController([]));
+    Get.lazyPut<PlayerController>(() => PlayerController());
     Get.lazyPut<AppScrollController>(() => AppScrollController());
   }
 }

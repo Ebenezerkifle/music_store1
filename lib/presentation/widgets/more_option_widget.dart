@@ -5,85 +5,165 @@ import 'package:mucic_store/controller/play_list_controller.dart';
 import '../../models/music_model.dart';
 
 final playListController = Get.find<PlayListController>();
-Widget moreOptionWidget({
+Future<dynamic> moreOption({
   required BuildContext context,
   required Music music,
 }) {
-  return Container(
-    color: Colors.black,
-    height: MediaQuery.of(context).size.height * 0.3,
-    width: MediaQuery.of(context).size.width,
-    padding: EdgeInsets.only(
-      right: MediaQuery.of(context).size.width * 0.1,
-      left: MediaQuery.of(context).size.width * 0.1,
-    ),
-    // color: Colors.black,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              listItem(
-                  title: music.isFavorite == true
-                      ? "Remove from Favorite"
-                      : "Add to Favorite",
-                  icon: Icon(
-                      (music.isFavorite == true)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: Colors.white),
-                  onTap: () {
-                    if (music.isFavorite == true) {
-                      music.isFavorite = false;
-                      playListController.removeFromFavorite(music);
-                    } else {
-                      music.isFavorite = true;
-                      playListController.addToFavorite(music);
-                    }
-                  }),
-              const SizedBox(height: 10),
-              listItem(
-                title: "Play Next",
-                icon:
-                    const Icon(Icons.playlist_play_sharp, color: Colors.white),
-                onTap: () {},
-              ),
-              const SizedBox(height: 10),
-              listItem(
-                title: "Add to Playlist",
-                icon: const Icon(Icons.playlist_add, color: Colors.white),
-                onTap: () {},
-              ),
-              const SizedBox(height: 10),
-              listItem(
-                title: "Set sleep time",
-                icon: const Icon(Icons.timer_sharp, color: Colors.white),
-                onTap: () {},
-              ),
-            ]),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.08,
-          child: Center(
-            child: TextButton(
-              onPressed: Get.back,
-              child: const Text(
-                "Close",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                textScaleFactor: 1.3,
-              ),
-            ),
+  return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(100.0),
+        ),
+      ),
+      backgroundColor: Colors.yellow[900], // <-- SEE HERE
+      builder: (context) {
+        return Container(
+          color: Colors.grey[900],
+          height: MediaQuery.of(context).size.height * 0.27,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width * 0.1,
+            left: MediaQuery.of(context).size.width * 0.05,
           ),
-        )
-      ],
-    ),
-  );
+          // color: Colors.black,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // const SizedBox(height: 10),
+                listItem(
+                    title: music.isFavorite == true
+                        ? "Remove from Favorite"
+                        : "Add to Favorite",
+                    icon: Icon(
+                        (music.isFavorite == true)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.white),
+                    onTap: () {
+                      if (music.isFavorite == true) {
+                        music.isFavorite = false;
+                        playListController.removeFromFavorite(music);
+                        Get.back();
+                        Get.snackbar("Add to Favorite List",
+                            "a music is added to favorite list",
+                            snackPosition: SnackPosition.BOTTOM,
+                            borderColor: Colors.yellow);
+                      } else {
+                        music.isFavorite = true;
+                        playListController.addToFavorite(music);
+                        Get.back();
+                        Get.snackbar("Add to Favorite List",
+                            "a music is added to favorite list",
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                            snackPosition: SnackPosition.BOTTOM,
+                            borderColor: Colors.yellow);
+                      }
+                    }),
+                // const SizedBox(height: 10),
+                listItem(
+                  title: "Play Next",
+                  icon: const Icon(Icons.playlist_play_sharp,
+                      color: Colors.white),
+                  onTap: () {},
+                ),
+                // const SizedBox(height: 10),
+                listItem(
+                  title: "Add to Playlist",
+                  icon: const Icon(Icons.playlist_add, color: Colors.white),
+                  onTap: () {},
+                ),
+                // const SizedBox(height: 10),
+                listItem(
+                  title: "Set sleep time",
+                  icon: const Icon(Icons.timer_sharp, color: Colors.white),
+                  onTap: () {},
+                ),
+              ]),
+        );
+      });
 }
+
+// Widget moreOptionWidget({
+//   required BuildContext context,
+//   required Music music,
+// }) {
+//   return Container(
+//     color: Colors.black,
+//     height: MediaQuery.of(context).size.height * 0.27,
+//     width: MediaQuery.of(context).size.width,
+//     padding: EdgeInsets.only(
+//       right: MediaQuery.of(context).size.width * 0.1,
+//       left: MediaQuery.of(context).size.width * 0.05,
+//     ),
+//     // color: Colors.black,
+//     child: Column(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Column(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const SizedBox(height: 10),
+//               listItem(
+//                   title: music.isFavorite == true
+//                       ? "Remove from Favorite"
+//                       : "Add to Favorite",
+//                   icon: Icon(
+//                       (music.isFavorite == true)
+//                           ? Icons.favorite
+//                           : Icons.favorite_border,
+//                       color: Colors.white),
+//                   onTap: () {
+//                     if (music.isFavorite == true) {
+//                       music.isFavorite = false;
+//                       playListController.removeFromFavorite(music);
+//                     } else {
+//                       music.isFavorite = true;
+//                       playListController.addToFavorite(music);
+//                     }
+//                   }),
+//               const SizedBox(height: 10),
+//               listItem(
+//                 title: "Play Next",
+//                 icon:
+//                     const Icon(Icons.playlist_play_sharp, color: Colors.white),
+//                 onTap: () {},
+//               ),
+//               const SizedBox(height: 10),
+//               listItem(
+//                 title: "Add to Playlist",
+//                 icon: const Icon(Icons.playlist_add, color: Colors.white),
+//                 onTap: () {},
+//               ),
+//               const SizedBox(height: 10),
+//               listItem(
+//                 title: "Set sleep time",
+//                 icon: const Icon(Icons.timer_sharp, color: Colors.white),
+//                 onTap: () {},
+//               ),
+//             ]),
+//         SizedBox(
+//           height: 50,
+//           child: Center(
+//             child: TextButton(
+//               onPressed: Get.back,
+//               child: const Text(
+//                 "Close",
+//                 style: TextStyle(
+//                   color: Colors.white,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//                 textScaleFactor: 1.3,
+//               ),
+//             ),
+//           ),
+//         )
+//       ],
+//     ),
+//   );
+// }
 
 Widget listItem({
   required String title,
@@ -93,9 +173,13 @@ Widget listItem({
   return GestureDetector(
     onTap: onTap,
     child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          icon,
+          const SizedBox(
+            width: 20,
+          ),
           Text(
             title,
             maxLines: 1,
@@ -104,9 +188,8 @@ Widget listItem({
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-            textScaleFactor: 1.2,
+            textScaleFactor: 1.3,
           ),
-          icon,
         ]),
   );
 }

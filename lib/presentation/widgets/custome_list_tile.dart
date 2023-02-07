@@ -135,8 +135,7 @@ Widget customeListTile({
                             )),
                         IconButton(
                           onPressed: () {
-                            Get.bottomSheet(moreOptionWidget(
-                                context: context, music: music));
+                            moreOption(context: context, music: music);
                           },
                           icon: const Icon(
                             Icons.more_vert,

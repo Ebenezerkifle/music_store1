@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
-import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
@@ -12,15 +11,10 @@ import 'package:mucic_store/services/query_songs.dart';
 import '../../controller/player_controller.dart';
 import '../widgets/silver_presistent_widget.dart';
 
-class TrackListPage extends StatefulWidget {
+class TrackListPage extends StatelessWidget {
   final String title;
-  const TrackListPage({required this.title, super.key});
+  TrackListPage({required this.title, super.key});
 
-  @override
-  State<TrackListPage> createState() => _TrackListPageState();
-}
-
-class _TrackListPageState extends State<TrackListPage> {
   List<String> catagoryList = [
     "All",
     "Recent",
@@ -56,28 +50,14 @@ class _TrackListPageState extends State<TrackListPage> {
   //   super.initState();
   // }
 
-  void scrollToTop() {
-    // a method to bring the top element of a scrollable widget.
-    setState(() {
-      _scrollController.animateTo(
-        _scrollController.position.minScrollExtent,
-        // maxScrollExtent - down most.
-        // minScrollExtent - up most.
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(milliseconds: 500),
-      );
-      floatingButtonVisiblity = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     print("==========================");
-    print(playerController.currentPlayList.length);
+    print(playListController.currentSongs.length);
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         elevation: 0,
       ),
       body: CustomScrollView(
@@ -101,8 +81,9 @@ class _TrackListPageState extends State<TrackListPage> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
-                      child: Obx(
-                        () => Row(
+                      child: Obx(() {
+                        print('*****************************');
+                        return Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: List.generate(
                             catagoryList.length,
@@ -147,16 +128,20 @@ class _TrackListPageState extends State<TrackListPage> {
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     )
                   ],
                 ),
               ),
             ),
           ),
-          Obx(
-            () => (playListController.currentSongs.isEmpty)
+          Obx(() {
+            print('&&&&&&&&&&&&&&&&&&&&&&');
+            print(playListController.index);
+            print(playListController.currentSongs.isEmpty);
+            print(playListController.currentSongs.length);
+            return (playListController.currentSongs.isEmpty)
                 ? SliverFillRemaining(
                     child: Center(
                       child: Text(
@@ -175,6 +160,8 @@ class _TrackListPageState extends State<TrackListPage> {
                 : SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
+                        print('&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^');
+                        print(playListController.currentSongs[index].title);
                         return customeListTile(
                           music: playListController.currentSongs[index],
                           context: context,
@@ -224,15 +211,15 @@ class _TrackListPageState extends State<TrackListPage> {
                       },
                       childCount: playListController.currentSongs.length,
                     ),
-                  ),
-          )
+                  );
+          }),
         ],
       ),
       floatingActionButton: Visibility(
         visible: floatingButtonVisiblity,
         child: FloatingActionButton(
           onPressed: () {
-            scrollToTop();
+            //  scrollToTop();
           },
           backgroundColor: Colors.black,
           child: const Icon(

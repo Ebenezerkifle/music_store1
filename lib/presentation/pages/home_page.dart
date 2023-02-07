@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:mucic_store/controller/app_scroll_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
+import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
@@ -19,14 +21,7 @@ import 'album_track_page.dart';
 // homepage is the landing page for this application. on which we have alot options
 // to choose...hat ever we want to choose.
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   //The app displays a list of musics which are catagorized on different possible
   //catagories. catagoryList is a variable to store those catagories.
 
@@ -52,6 +47,8 @@ class _HomePageState extends State<HomePage> {
   late bool floatingButtonVisiblity = false;
   //a variable to control the visibility of a bottom Navigation bar.
   late bool bottomNavVisibility = true;
+
+  HomePage({Key? key}) : super(key: key);
 
   // scroll controller is here to give us the information about our scrolling
   // we want this controller to help us decide if the floating button and bottom navigation bar
@@ -88,9 +85,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    playListController.loadAllSongs(songListController.songList);
-    playListController.updateIndex(playListController.index.value);
-
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      playListController.loadAllSongs(songListController.songList);
+      playListController.updateIndex(playListController.index.value);
+    });
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
@@ -220,8 +218,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Get.to(() =>
-                                          const TrackListPage(title: "Tracks"));
+                                      Get.to(
+                                          () => TrackListPage(title: "Tracks"));
                                     },
                                     child: const Text(
                                       'see all',
@@ -437,6 +435,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ]),
+      // bottomSheet:
+      //    ()? Container():playlists(context: context, songList: playController.currentPlayList),
     );
   }
 }

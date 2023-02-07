@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
+import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
 
 class PlayController extends StatefulWidget {
-  final double iconSize;
   final List<Music> songDetail;
   final bool isPlaying;
   final int index;
   final int id;
   const PlayController({
     Key? key,
-    required this.iconSize,
     required this.songDetail,
     required this.isPlaying,
     required this.index,
@@ -25,6 +24,7 @@ class PlayController extends StatefulWidget {
 
 class _PlayControllerState extends State<PlayController> {
   final playerController = Get.find<PlayerController>();
+  double iconSize = 70;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _PlayControllerState extends State<PlayController> {
             textScaleFactor: 1.5,
           ),
           Text(
-            playerController.songSubtitle.value,
+            '${playerController.artist.value} - ${playerController.album.value}',
             style: const TextStyle(
               color: Colors.grey,
             ),
@@ -61,59 +61,48 @@ class _PlayControllerState extends State<PlayController> {
             timeLabelType: TimeLabelType.totalTime,
             onSeek: playerController.seek,
           ),
-          // : ProgressBar(
-          //     progress: Duration.zero,
-          //     total: Duration(
-          //         microseconds: widget.songDetail[0].duration ?? 0),
-          //     buffered: Duration.zero,
-          //     thumbColor: Colors.yellow,
-          //     thumbGlowColor: Colors.white,
-          //     baseBarColor: Colors.grey,
-          //     progressBarColor: Colors.yellow,
-          //     timeLabelLocation: TimeLabelLocation.below,
-          //     timeLabelTextStyle: const TextStyle(color: Colors.white),
-          //     timeLabelType: TimeLabelType.totalTime,
-          //     // onSeek: playerController.seek,
-          //   ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: playerController.onShuffleClick,
                 icon: const Icon(Icons.repeat_outlined), //shuffle
                 color: Colors.white,
-                iconSize: widget.iconSize * 0.6,
+                iconSize: iconSize * 0.6,
               ),
               IconButton(
                 onPressed: playerController.onPreviousButtonclick,
                 icon: const Icon(Icons.skip_previous_rounded),
                 color: Colors.white,
-                iconSize: widget.iconSize * 0.8,
+                iconSize: iconSize * 0.6,
               ),
               (playerController.isPlaying(widget.id))
                   ? IconButton(
                       onPressed: playerController.pause,
-                      icon: const Icon(Icons.pause_circle_outline),
+                      icon: const Icon(Icons.pause_circle),
                       color: Colors.white,
-                      iconSize: widget.iconSize,
+                      iconSize: iconSize,
                     )
                   : IconButton(
                       onPressed: playerController.play,
-                      icon: const Icon(Icons.play_circle_outline_sharp),
+                      icon: const Icon(Icons.play_circle),
                       color: Colors.white,
-                      iconSize: widget.iconSize,
+                      iconSize: iconSize,
                     ),
               IconButton(
                 onPressed: playerController.onNextButtonClick,
                 icon: const Icon(Icons.skip_next_rounded),
                 color: Colors.white,
-                iconSize: widget.iconSize * 0.8,
+                iconSize: iconSize * 0.6,
               ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.stop_rounded),
+                onPressed: () => bottomSheetWidget(
+                  context: context,
+                  songList: playerController.currentPlayList,
+                ),
+                icon: const Icon(Icons.playlist_play_rounded),
                 color: Colors.white,
-                iconSize: widget.iconSize * 0.6,
+                iconSize: iconSize * 0.6,
               ),
             ],
           ),

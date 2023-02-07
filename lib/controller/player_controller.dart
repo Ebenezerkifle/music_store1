@@ -20,12 +20,13 @@ class PlayerController extends GetxController {
   final currentPlayList = <Music>[].obs;
   final songUri = ''.obs;
   final artist = ''.obs;
+  final playMode = 0.obs; // a variable to hold the value of a playmode
+  // 3-loop all, 2-loop single, 1-shaffle and 0-no loop,
 
-  // var currentSong = Music.obs;
-
-  PlayerController(List<Music> playList) {
+  PlayerController() {
     _audioPlayer = AudioPlayer();
     _playList = ConcatenatingAudioSource(children: []);
+    //loadPlayList(playList, 0);
   }
 
   loadPlayList(List<Music> playList, int index) async {
@@ -143,6 +144,10 @@ class PlayerController extends GetxController {
     }
   }
 
+  void onShuffleClick() {
+    _audioPlayer.shuffle();
+  }
+
   //a method to toggle between a progress time and remaining time.
   updateWhatToShow() {
     (showRemaining.value) ? showRemaining(false) : showRemaining(true);
@@ -151,19 +156,4 @@ class PlayerController extends GetxController {
   toggleShowList() {
     showList(showList.value ? false : true);
   }
-
-  // void generatePlayList(List<Music> songList, int index) {
-  //   List<Music> newPlayList = [];
-  //   if (index != 0) {
-  //     for (int i = index; i < songList.length; i++) {
-  //       newPlayList.add(songList[i]);
-  //     }
-  //     for (int j = 0; j < index; j++) {
-  //       newPlayList.add(songList[j]);
-  //     }
-  //     loadPlayList(newPlayList);
-  //   } else {
-  //     loadPlayList(songList);
-  //   }
-  // }
 }
