@@ -40,6 +40,7 @@ class QuerySongs {
           id: song.id,
           artist: song.artist ?? '',
           displayNameWOExt: song.displayNameWOExt,
+          isFavorite: false,
         ),
       );
     }

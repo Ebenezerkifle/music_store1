@@ -8,6 +8,7 @@ class Music {
   final int duration;
   final String artist;
   final String displayNameWOExt;
+  bool? isFavorite;
   Music({
     required this.album,
     required this.duration,
@@ -16,6 +17,7 @@ class Music {
     required this.id,
     required this.artist,
     required this.displayNameWOExt,
+    required this.isFavorite,
   });
 
   static Map<String, dynamic> toMap(Music music) {
@@ -27,19 +29,20 @@ class Music {
       'duration': music.duration,
       'artist': music.artist,
       'displayNameWOExt': music.displayNameWOExt,
+      'isFavorite': music.isFavorite,
     };
   }
 
   factory Music.fromMap(Map<String, dynamic> map) {
     return Music(
-      title: map['title'],
-      uri: map['uri'],
-      id: map['id'],
-      album: map['album'],
-      duration: map['duration'],
-      artist: map['artst'],
-      displayNameWOExt: map['displayNameWOExt'],
-    );
+        title: map['title'],
+        uri: map['uri'],
+        id: map['id'],
+        album: map['album'],
+        duration: map['duration'],
+        artist: map['artst'],
+        displayNameWOExt: map['displayNameWOExt'],
+        isFavorite: map['isFavorite']);
   }
 
   // this method encodes a list of objects into a single string.

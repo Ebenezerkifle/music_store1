@@ -22,118 +22,113 @@ class AlbumTrackPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: MyColors.primaryColor,
-        appBar: AppBar(
-          title: Text(
-            album[0].album.toString(),
-            style: const TextStyle(
+      backgroundColor: MyColors.primaryColor,
+      appBar: AppBar(
+        title: Text(
+          album[0].album.toString(),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_vert,
               color: Colors.white,
-              fontWeight: FontWeight.bold,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: <Widget>[
-            SliverPersistentHeader(
-              pinned: false,
-              floating: true,
-              delegate: PersistentHeader(
-                height: MediaQuery.of(context).size.height * 0.33,
-                color: Colors.black,
-                context: context,
-                widget: Container(
-                  color: MyColors.primaryColor,
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Stack(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        children: [
-                          customeGridWidget(
-                            id: album[0].id,
-                            context: context,
-                            title: album[0].album.toString(),
-                            height: MediaQuery.of(context).size.height * 0.23,
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            smallDetails: [
-                              album[0].artist,
-                            ],
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+        ],
+      ),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: <Widget>[
+          SliverPersistentHeader(
+            pinned: false,
+            floating: true,
+            delegate: PersistentHeader(
+              height: MediaQuery.of(context).size.height * 0.33,
+              color: Colors.black,
+              context: context,
+              widget: Container(
+                color: MyColors.primaryColor,
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        customeGridWidget(
+                          id: album[0].id,
+                          context: context,
+                          title: album[0].album.toString(),
+                          height: MediaQuery.of(context).size.height * 0.23,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          smallDetails: [
+                            album[0].artist,
+                          ],
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return customeListTile(
-                    title: album[index].title,
-                    context: context,
-                    id: album[index].id,
-                    duration: Duration(milliseconds: album[index].duration),
-                    onTap: () {
-                      if (!playerController.playing.value &&
-                          playerController.songId.value == album[index].id) {
-                        playerController.play();
-                      } else if (playerController.playing.value &&
-                          playerController.songId.value == album[index].id) {
-                        playerController.pause();
-                      } else {
-                        playerController.generatePlayList(album, index);
-                        playerController.play();
-                      }
-                      Get.to(
-                        () => PlayingPage(
-                          isPlaying:
-                              playerController.isPlaying(album[index].id),
-                          index: index,
-                          id: album[index].id,
-                        ),
-                      );
-                    },
-                    onPlayTap: () {
-                      if (!playerController.playing.value &&
-                          playerController.songId.value == album[index].id) {
-                        playerController.play();
-                      } else if (playerController.playing.value &&
-                          playerController.songId.value == album[index].id) {
-                        playerController.pause();
-                      } else {
-                        playerController.generatePlayList(album, index);
-                        playerController.play();
-                      }
-                    },
-                    smallDetails: [
-                      album[index].album,
-                      album[index].artist,
-                    ],
-                    color: MyColors.primaryColor,
-                  );
-                },
-                childCount: album.length,
-              ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return customeListTile(
+                  music: album[index],
+                  context: context,
+                  duration: Duration(milliseconds: album[index].duration),
+                  onTap: () {
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.loadPlayList(album, index);
+                      playerController.play();
+                    }
+                    Get.to(
+                      () => PlayingPage(
+                        isPlaying: playerController.isPlaying(album[index].id),
+                        index: index,
+                        id: album[index].id,
+                      ),
+                    );
+                  },
+                  onPlayTap: () {
+                    if (!playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.play();
+                    } else if (playerController.playing.value &&
+                        playerController.songId.value == album[index].id) {
+                      playerController.pause();
+                    } else {
+                      playerController.loadPlayList(album, index);
+                      playerController.play();
+                    }
+                  },
+                  color: MyColors.primaryColor,
+                );
+              },
+              childCount: album.length,
             ),
-          ],
-        ),
-        bottomNavigationBar: Obx(
-          () => Visibility(
-              visible: playerController.playing.value,
-              child: currentSong(context: context)),
-        ));
+          ),
+        ],
+      ),
+      bottomNavigationBar: Obx(
+        () => (playController.songId.value != 0)
+            ? currentSong(context: context)
+            : Container(),
+      ),
+    );
   }
 }

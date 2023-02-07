@@ -51,7 +51,7 @@ Future<dynamic> bottomSheetWidget({
                           songList.length,
                           (index) => GestureDetector(
                                 onTap: () {
-                                  playerController.generatePlayList(
+                                  playerController.loadPlayList(
                                       songList, index);
                                 },
                                 child: Row(

@@ -103,8 +103,8 @@ Widget customeGridWidget({
                     // if a playlist is aready loaded!
                     playerController.play();
                   } else {
-                    playerController
-                        .loadPlayList(songController.albums[title] ?? []);
+                    playerController.loadPlayList(
+                        songController.albums[title] ?? [], 0);
 
                     playerController.play();
                   }

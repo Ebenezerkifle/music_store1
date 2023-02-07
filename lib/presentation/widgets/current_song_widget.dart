@@ -8,11 +8,10 @@ import '../../controller/player_controller.dart';
 import '../pages/playing_page.dart';
 import 'bottom_sheet_widget.dart';
 
-Widget currentSong({
-  required BuildContext context,
-}) {
-  final playController = Get.find<PlayerController>();
-  final playListController = Get.find<PlayListController>();
+final playController = Get.find<PlayerController>();
+final playListController = Get.find<PlayListController>();
+
+void addToRecent() {
   playListController.addToRecentPlayList(
     Music(
       album: playController.album.value,
@@ -22,13 +21,20 @@ Widget currentSong({
       id: playController.songId.value,
       artist: playController.artist.value,
       displayNameWOExt: playController.songSubtitle.value,
+      isFavorite: false,
     ),
   );
+}
 
+Widget currentSong({
+  required BuildContext context,
+}) {
   // a function to format time in two digit form.
   //mostly we get trouble when we have a second value lessthan 10
   //so this function converts a single digit number to two digit if there is one.
   String twoDigits(int n) => n.toString().padLeft(2, "0");
+
+  addToRecent();
   return GestureDetector(
     onTap: () => Get.to(PlayingPage(
       isPlaying: true,
@@ -50,6 +56,10 @@ Widget currentSong({
                   (playController.progress.value.inSeconds /
                       playController.totalDuration.value.inSeconds),
               color: Colors.yellow,
+              constraints: BoxConstraints(
+                minWidth: 0,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).size.height * 0.01),
             ),

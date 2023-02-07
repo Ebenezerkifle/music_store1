@@ -110,7 +110,7 @@ class PlayingPage extends StatelessWidget {
                   songListController.songList.length,
                   (index) => GestureDetector(
                     onTap: () {
-                      playerController.generatePlayList(
+                      playerController.loadPlayList(
                           songListController.songList, index);
                     },
                     child: Row(

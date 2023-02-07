@@ -35,8 +35,11 @@ class PlayListController extends GetxController {
     currentSongs(songs);
   }
 
+  void addToFavorite(Music favSong) {
+    loadFavoriteSongs([favSong, ...favoriteSongs]);
+  }
+
   void addToRecentPlayList(Music currentSong) {
-    //Todo check if the song is already on recent play list.
     for (Music song in recentsSongs) {
       if (song.id == currentSong.id) {
         return;
@@ -44,5 +47,14 @@ class PlayListController extends GetxController {
     }
     List<Music> list = [currentSong, ...recentsSongs];
     loadRecentSongs(list);
+  }
+
+  void removeFromFavorite(Music music) {
+    for (int i = 0; i < favoriteSongs.length; i++) {
+      if (favoriteSongs[i].id == music.id) {
+        favoriteSongs.removeAt(i);
+        break;
+      }
+    }
   }
 }

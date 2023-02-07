@@ -26,10 +26,9 @@ class PlayerController extends GetxController {
   PlayerController(List<Music> playList) {
     _audioPlayer = AudioPlayer();
     _playList = ConcatenatingAudioSource(children: []);
-    loadPlayList(playList);
   }
 
-  loadPlayList(List<Music> playList) async {
+  loadPlayList(List<Music> playList, int index) async {
     _playList = ConcatenatingAudioSource(
       children: List.generate(
         playList.length,
@@ -46,11 +45,8 @@ class PlayerController extends GetxController {
         ),
       ),
     );
-    //a method to control playing and pauseing an audio.
-    //if it is playing the action should pause.
-    // else it should play.
 
-    _audioPlayer.setAudioSource(_playList);
+    _audioPlayer.setAudioSource(_playList, initialIndex: index);
     currentPlayList(playList);
     (_playList.length > 0) ? playerListner() : null;
   }
@@ -128,39 +124,6 @@ class PlayerController extends GetxController {
   final recentPlayList = Get.find<PlayListController>();
   void play() {
     _audioPlayer.play();
-    // print('*************************');
-    // print(songTitle.value);
-
-    // Todo check if there is a recent playlist not only being empty
-    // Todo every time when play button is clicked it should update the recent items.
-    // songController.addToPlayList(
-    //     "Recent",
-    //     Music(
-    //       album: album.value,
-    //       id: songId.value,
-    //       duration: totalDuration.value.inMilliseconds,
-    //       uri: songUri.value,
-    //       title: songTitle.value,
-    //       artist: artist.value,
-    //     ));
-    // addToRecentPlayList();
-  }
-
-  void addToRecentPlayList() async {
-    print("============================");
-    print(songTitle.value);
-    List<Music> recentSongList = [...recentPlayList.recentsSongs];
-    recentSongList.add(Music(
-        album: album.value,
-        duration: totalDuration.value.inMilliseconds,
-        title: songTitle.value,
-        uri: songUri.value,
-        id: songId.value,
-        artist: artist.value,
-        displayNameWOExt: songSubtitle.value));
-    print(Music.encode(recentSongList));
-    print(recentSongList.length);
-    //recentPlayList.loadRecentSongs(recentPlayList.recentsSongs);
   }
 
   void onPreviousButtonclick() {
@@ -188,18 +151,18 @@ class PlayerController extends GetxController {
     showList(showList.value ? false : true);
   }
 
-  void generatePlayList(List<Music> songList, int index) {
-    List<Music> newPlayList = [];
-    if (index != 0) {
-      for (int i = index; i < songList.length; i++) {
-        newPlayList.add(songList[i]);
-      }
-      for (int j = 0; j < index; j++) {
-        newPlayList.add(songList[j]);
-      }
-      loadPlayList(newPlayList);
-    } else {
-      loadPlayList(songList);
-    }
-  }
+  // void generatePlayList(List<Music> songList, int index) {
+  //   List<Music> newPlayList = [];
+  //   if (index != 0) {
+  //     for (int i = index; i < songList.length; i++) {
+  //       newPlayList.add(songList[i]);
+  //     }
+  //     for (int j = 0; j < index; j++) {
+  //       newPlayList.add(songList[j]);
+  //     }
+  //     loadPlayList(newPlayList);
+  //   } else {
+  //     loadPlayList(songList);
+  //   }
+  // }
 }

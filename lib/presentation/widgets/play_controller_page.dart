@@ -29,7 +29,7 @@ class _PlayControllerState extends State<PlayController> {
   @override
   Widget build(BuildContext context) {
     (!widget.isPlaying)
-        ? playerController.generatePlayList(widget.songDetail, widget.index)
+        ? playerController.loadPlayList(widget.songDetail, widget.index)
         : null;
     return Obx(
       () => Column(

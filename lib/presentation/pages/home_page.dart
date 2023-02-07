@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mucic_store/controller/app_scroll_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   final songListController = Get.find<SongController>();
   final playController = Get.find<PlayerController>();
   final querySongsController = Get.find<QuerySongs>();
+  final scrollController = Get.find<AppScrollController>();
 
   List<String> catagoryList = [
     "All",
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   // scroll controller is here to give us the information about our scrolling
   // we want this controller to help us decide if the floating button and bottom navigation bar
   // has to be hidden or not.
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
   // var controller = ScrollController.obs;
 
   //init state calls the listener as soon as the app starts, to get the information about
@@ -79,20 +81,6 @@ class _HomePageState extends State<HomePage> {
   //   super.initState();
   // }
 
-  void scrollToTop() {
-    // a method to bring the top element of a scrollable widget.
-    setState(() {
-      _scrollController.animateTo(
-        _scrollController.position.minScrollExtent,
-        // maxScrollExtent - down most.
-        // minScrollExtent - up most.
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(milliseconds: 500),
-      );
-      floatingButtonVisiblity = false;
-    });
-  }
-
   // a function to format time in two digit form.
   //mostly we get trouble when we have a second value lessthan 10
   //so this function converts a single digit number to two digit if there is one.
@@ -110,7 +98,7 @@ class _HomePageState extends State<HomePage> {
           color: MyColors.primaryColor,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-            controller: _scrollController,
+            controller: scrollController.scrollController,
             slivers: <Widget>[
               const SliverAppBar(
                 backgroundColor: Colors.black,
@@ -341,10 +329,8 @@ class _HomePageState extends State<HomePage> {
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             return customeListTile(
-                              title:
-                                  playListController.currentSongs[index].title,
+                              music: playListController.currentSongs[index],
                               context: context,
-                              id: playListController.currentSongs[index].id,
                               onTap: () {
                                 if (!playController.playing.value &&
                                     playController.songId.value ==
@@ -357,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                                             .currentSongs[index].id) {
                                   // playController.pause();
                                 } else {
-                                  playController.generatePlayList(
+                                  playController.loadPlayList(
                                       playListController.currentSongs, index);
                                   playController.play();
                                 }
@@ -384,15 +370,11 @@ class _HomePageState extends State<HomePage> {
                                             .currentSongs[index].id) {
                                   playController.pause();
                                 } else {
-                                  playController.generatePlayList(
+                                  playController.loadPlayList(
                                       playListController.currentSongs, index);
                                   playController.play();
                                 }
                               },
-                              smallDetails: [
-                                playListController.currentSongs[index].album,
-                                playListController.currentSongs[index].artist,
-                              ],
                               color: MyColors.primaryColor,
                               duration: Duration(
                                   milliseconds: playListController
@@ -411,7 +393,7 @@ class _HomePageState extends State<HomePage> {
         visible: floatingButtonVisiblity,
         child: FloatingActionButton(
           onPressed: () {
-            scrollToTop();
+            scrollController.scrollToTop();
           },
           backgroundColor: Colors.black,
           child: const Icon(
@@ -422,11 +404,13 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: Wrap(children: [
         Obx(
-          () => Visibility(
-              visible: playController.songId.value != 0,
-              child: (playController.songId.value != 0)
-                  ? currentSong(context: context)
-                  : Container()),
+          () {
+            //TODO work on obx
+            // Future.delayed(Duration.zero,(){.......});
+            return (playController.songId.value != 0)
+                ? currentSong(context: context)
+                : Container();
+          },
         ),
         Container(
           height: 0.2,
@@ -451,40 +435,6 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(Icons.settings), label: "setting"),
             ],
           ),
-          // child: Container(
-          //   height: MediaQuery.of(context).size.height * 0.06,
-          //   width: MediaQuery.of(context).size.width,
-          //   color: Colors.black,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: [
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.home_filled,
-          //             color: Colors.yellow,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.favorite_rounded,
-          //             color: Colors.white,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.list,
-          //             color: Colors.white,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.settings,
-          //             color: Colors.white,
-          //           ))
-          //     ],
-          //   ),
-          // ),
         ),
       ]),
     );
