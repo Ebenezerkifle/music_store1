@@ -34,7 +34,9 @@ Widget currentSong({
   //so this function converts a single digit number to two digit if there is one.
   String twoDigits(int n) => n.toString().padLeft(2, "0");
 
-  addToRecent();
+  Future.delayed(Duration.zero, () {
+    addToRecent();
+  });
   return GestureDetector(
     onTap: () => Get.to(PlayingPage(
       isPlaying: true,
@@ -44,26 +46,15 @@ Widget currentSong({
       // padding: const EdgeInsets.symmetric(horizontal: 10),
       height: MediaQuery.of(context).size.height * 0.09,
       width: MediaQuery.of(context).size.width,
-      color: Colors.black,
+
+      decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Obx(
-            () => Container(
-              height: 3,
-              width: MediaQuery.of(context).size.width *
-                  (playController.progress.value.inSeconds /
-                      playController.totalDuration.value.inSeconds),
-              color: Colors.yellow,
-              constraints: BoxConstraints(
-                minWidth: 0,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height * 0.01),
-            ),
-          ),
           Container(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,7 +96,7 @@ Widget currentSong({
                               ),
                               Expanded(
                                 child: Text(
-                                  playController.songSubtitle.value,
+                                  '${playController.album.value} - ${playController.artist.value}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.normal,
                                     color: Colors.white,
@@ -161,6 +152,21 @@ Widget currentSong({
                     ),
                   )
                 ]),
+          ),
+          Obx(
+            () => Container(
+              height: 3,
+              width: MediaQuery.of(context).size.width *
+                  (playController.progress.value.inSeconds /
+                      playController.totalDuration.value.inSeconds),
+              color: Colors.yellow,
+              constraints: BoxConstraints(
+                minWidth: 0,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height * 0.01),
+            ),
           ),
         ],
       ),

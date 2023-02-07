@@ -91,6 +91,7 @@ class PlayerController extends GetxController {
       songSubtitle(sequenceState.currentSource!.tag[2]);
       album(sequenceState.currentSource!.tag[3]);
       songUri(sequenceState.currentSource!.tag[4]);
+      artist(sequenceState.currentSource!.tag[5]);
       // TODO: update playlist
       // TODO: update shuffle mode
       // TODO: update previous and next buttons

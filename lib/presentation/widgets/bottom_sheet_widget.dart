@@ -16,7 +16,7 @@ Future<dynamic> bottomSheetWidget({
           top: Radius.circular(50.0),
         ),
       ),
-      backgroundColor: Colors.black, // <-- SEE HERE
+      backgroundColor: Colors.grey[900], // <-- SEE HERE
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.8,

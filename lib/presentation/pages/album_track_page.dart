@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
@@ -116,7 +115,8 @@ class AlbumTrackPage extends StatelessWidget {
                       playerController.play();
                     }
                   },
-                  color: MyColors.primaryColor,
+                  // color: Colors.grey.shade900,
+                  color: Colors.black87,
                 );
               },
               childCount: album.length,
