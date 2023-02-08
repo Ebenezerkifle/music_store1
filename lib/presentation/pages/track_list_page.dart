@@ -52,8 +52,6 @@ class TrackListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("==========================");
-    print(playListController.currentSongs.length);
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       appBar: AppBar(
@@ -82,7 +80,6 @@ class TrackListPage extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
                       child: Obx(() {
-                        print('*****************************');
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: List.generate(
@@ -137,10 +134,6 @@ class TrackListPage extends StatelessWidget {
             ),
           ),
           Obx(() {
-            print('&&&&&&&&&&&&&&&&&&&&&&');
-            print(playListController.index);
-            print(playListController.currentSongs.isEmpty);
-            print(playListController.currentSongs.length);
             return (playListController.currentSongs.isEmpty)
                 ? SliverFillRemaining(
                     child: Center(

@@ -7,7 +7,7 @@ import '../../models/music_model.dart';
 final playListController = Get.find<PlayListController>();
 Future<dynamic> moreOption({
   required BuildContext context,
-  required Music music,
+  required Music? music,
 }) {
   return showModalBottomSheet(
       context: context,
@@ -33,35 +33,23 @@ Future<dynamic> moreOption({
               children: [
                 // const SizedBox(height: 10),
                 listItem(
-                    title: music.isFavorite == true
-                        ? "Remove from Favorite"
-                        : "Add to Favorite",
+                    title: "Add to Favorite",
                     icon: Icon(
-                        (music.isFavorite == true)
+                        (music != null && music.isFavorite == true)
                             ? Icons.favorite
                             : Icons.favorite_border,
                         color: Colors.white),
                     onTap: () {
-                      if (music.isFavorite == true) {
+                      if (music != null && music.isFavorite == true) {
                         music.isFavorite = false;
                         playListController.removeFromFavorite(music);
                         Get.back();
-                        Get.snackbar("Add to Favorite List",
-                            "a music is added to favorite list",
-                            snackPosition: SnackPosition.BOTTOM,
-                            borderColor: Colors.yellow);
-                      } else {
+                      } else if (music != null) {
                         music.isFavorite = true;
                         playListController.addToFavorite(music);
                         Get.back();
-                        Get.snackbar("Add to Favorite List",
-                            "a music is added to favorite list",
-                            maxWidth: MediaQuery.of(context).size.width * 0.8,
-                            snackPosition: SnackPosition.BOTTOM,
-                            borderColor: Colors.yellow);
                       }
                     }),
-                // const SizedBox(height: 10),
                 listItem(
                   title: "Play Next",
                   icon: const Icon(Icons.playlist_play_sharp,

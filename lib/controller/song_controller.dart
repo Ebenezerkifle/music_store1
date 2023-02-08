@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SongController extends GetxController {
   final songList = <Music>[].obs;
+  final songMap = <int, Music>{}.obs;
   final songsLoading = true.obs;
   final songsLoaded = false.obs;
   final albumList = <List<Music>>[].obs;
@@ -24,12 +25,15 @@ class SongController extends GetxController {
       songsLoading(true);
       songList(await querysSongs.getListOfSongs());
       albums(querysSongs.getAlbumList());
+      songMap(querysSongs.getIdSongMap());
       updateAlbumList();
-      // playList(await getPlayList("Recent"));
       songsLoaded(true);
-    } else {}
+    } else {
+      // TODO handle this case.
+    }
   }
 
+  // a method that creates an album list with songs on it.
   updateAlbumList() {
     List<String> keys = [...albums.keys];
     List<List<Music>> albumsList1 = [];
@@ -38,30 +42,4 @@ class SongController extends GetxController {
     }
     albumList(albumsList1);
   }
-
-  // Future<List<Music>> getPlayList(String name) async {
-  //   pref = await SharedPreferences.getInstance();
-  //   final String? musicsString = pref.getString(name);
-  //   print("-------------------------");
-  //   print(musicsString);
-  //   List<Music> playList =
-  //       (musicsString != null) ? Music.decode(musicsString) : [];
-  //   print(playList);
-  //   return playList;
-  // }
-
-  // addToPlayList(String name, Music music) async {
-  //   final catagory = Get.find<TrackCatagoryController>();
-  //   pref = await SharedPreferences.getInstance();
-  //   List<Music> previousList = [];
-  //   previousList.add(music);
-  //   final String? musicsString = pref.getString(name);
-  //   previousList =
-  //       (musicsString != null) ? Music.decode(musicsString) : previousList;
-  //   print("**************************************");
-  //   print(previousList.toList());
-  //   final String encodeData = Music.encode(previousList);
-  //   print(encodeData);
-  //   await pref.setString(name, encodeData);
-  // }
 }

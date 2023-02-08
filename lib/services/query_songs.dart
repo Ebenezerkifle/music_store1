@@ -63,4 +63,12 @@ class QuerySongs {
     }
     return albums;
   }
+
+  Map<int, Music> getIdSongMap() {
+    Map<int, Music> songMap = {};
+    for (Music song in musicList) {
+      songMap[song.id] = song;
+    }
+    return songMap;
+  }
 }

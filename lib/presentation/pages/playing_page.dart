@@ -33,7 +33,10 @@ class PlayingPage extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                // Get.bottomSheet(moreOption(context: context, music: music));
+                moreOption(
+                  context: context,
+                  music: songListController.songMap[id],
+                );
               },
               icon: const Icon(Icons.more_vert),
             )
