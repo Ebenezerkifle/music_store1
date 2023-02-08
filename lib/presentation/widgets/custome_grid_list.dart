@@ -105,7 +105,6 @@ Widget customeGridWidget({
                   } else {
                     playerController.loadPlayList(
                         songController.albums[title] ?? [], 0);
-
                     playerController.play();
                   }
                   //Todo 2 when a pause button on an album clicked.

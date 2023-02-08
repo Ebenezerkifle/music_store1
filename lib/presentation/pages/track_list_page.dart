@@ -11,9 +11,10 @@ import 'package:mucic_store/services/query_songs.dart';
 import '../../controller/player_controller.dart';
 import '../widgets/silver_presistent_widget.dart';
 
+// ignore: must_be_immutable
 class TrackListPage extends StatelessWidget {
   final String title;
-  TrackListPage({required this.title, super.key});
+  TrackListPage({Key? key, required this.title}) : super(key: key);
 
   List<String> catagoryList = [
     "All",
@@ -31,24 +32,6 @@ class TrackListPage extends StatelessWidget {
   //mostly we get trouble when we have a second value lessthan 10
   //so this function converts a single digit number to two digit if there is one.
   String twoDigits(int n) => n.toString().padLeft(2, "0");
-
-  // @override
-  // void initState() {
-  //   _scrollController.addListener(() {
-  //     //scroll listener
-
-  //     double showoffset = 40.0;
-  //     //Back to top botton will show on scroll offset 40.0
-  //     if (_scrollController.offset > showoffset) {
-  //       floatingButtonVisiblity = true;
-  //       setState(() {});
-  //     } else {
-  //       floatingButtonVisiblity = false;
-  //       setState(() {});
-  //     }
-  //   });
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +136,6 @@ class TrackListPage extends StatelessWidget {
                 : SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        print('&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^');
-                        print(playListController.currentSongs[index].title);
                         return customeListTile(
                           music: playListController.currentSongs[index],
                           context: context,

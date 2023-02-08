@@ -8,7 +8,6 @@ import 'package:mucic_store/controller/player_controller.dart';
 final playerController = Get.find<PlayerController>();
 Future<dynamic> bottomSheetWidget({
   required BuildContext context,
-  required List<Music> songList,
 }) {
   return showModalBottomSheet(
       context: context,
@@ -32,7 +31,7 @@ Future<dynamic> bottomSheetWidget({
             children: [
               Center(
                 child: Text(
-                  'Queue (${songList.length} songs)',
+                  'Queue (${playerController.currentPlayList.length} songs)',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -48,7 +47,7 @@ Future<dynamic> bottomSheetWidget({
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: List.generate(
-                        songList.length,
+                        playerController.currentPlayList.length,
                         (index) => GestureDetector(
                               onTap: () {
                                 // playerController.loadPlayList(songList, index);
@@ -60,11 +59,14 @@ Future<dynamic> bottomSheetWidget({
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        songList[index].title,
+                                        playerController
+                                            .currentPlayList[index].title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            color: songList[index].id ==
+                                            color: playerController
+                                                        .currentPlayList[index]
+                                                        .id ==
                                                     playerController
                                                         .songId.value
                                                 ? Colors.yellow
@@ -75,7 +77,9 @@ Future<dynamic> bottomSheetWidget({
                                     IconButton(
                                       onPressed: () {},
                                       icon: Icon(Icons.cancel,
-                                          color: songList[index].id ==
+                                          color: playerController
+                                                      .currentPlayList[index]
+                                                      .id ==
                                                   playerController.songId.value
                                               ? Colors.yellow
                                               : Colors.white),

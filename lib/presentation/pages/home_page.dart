@@ -6,7 +6,6 @@ import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
-import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
 import 'package:mucic_store/presentation/widgets/custome_grid_list.dart';
 import 'package:mucic_store/presentation/widgets/custome_list_tile.dart';
@@ -435,8 +434,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ]),
-      // bottomSheet:
-      //    ()? Container():playlists(context: context, songList: playController.currentPlayList),
     );
   }
 }

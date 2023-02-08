@@ -98,7 +98,6 @@ class _PlayControllerState extends State<PlayController> {
               IconButton(
                 onPressed: () => bottomSheetWidget(
                   context: context,
-                  songList: playerController.currentPlayList,
                 ),
                 icon: const Icon(Icons.playlist_play_rounded),
                 color: Colors.white,

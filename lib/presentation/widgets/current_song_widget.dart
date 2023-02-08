@@ -142,8 +142,8 @@ Widget currentSong({
                             IconButton(
                               onPressed: () {
                                 bottomSheetWidget(
-                                    context: context,
-                                    songList: playController.currentPlayList);
+                                  context: context,
+                                );
                               },
                               icon: const Icon(
                                 Icons.playlist_play_rounded,

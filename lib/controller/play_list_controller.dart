@@ -20,9 +20,9 @@ class PlayListController extends GetxController {
     favoriteSongs(songs);
   }
 
-  loadCurrentSongs(List<Music> songs) {
-    currentSongs(songs);
-  }
+  // loadCurrentSongs(List<Music> songs) {
+  //   currentSongs(songs);
+  // }
 
   updateIndex(int i) {
     index(i);
