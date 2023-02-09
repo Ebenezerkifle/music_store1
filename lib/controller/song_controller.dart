@@ -12,6 +12,7 @@ class SongController extends GetxController {
   final albums = <String, List<Music>>{}.obs;
   final playList = <Music>[].obs; // recent playlist
   static late SharedPreferences pref;
+  final permission = false.obs;
 
   SongController() {
     fetchSongs();
@@ -19,9 +20,9 @@ class SongController extends GetxController {
 
   fetchSongs() async {
     QuerySongs querySongs = QuerySongs();
-    querySongs.requestStoragePermission();
-    bool permissionStatus = await querySongs.audioQuery.permissionsStatus();
+    bool permissionStatus = await querySongs.requestStoragePermission();
     if (permissionStatus) {
+      permission(true);
       songsLoading(true);
       songList(await querySongs.getListOfSongs());
       albums(querySongs.getAlbumList());
@@ -29,6 +30,7 @@ class SongController extends GetxController {
       updateAlbumList();
       songsLoaded(true);
     } else {
+      permission(false);
       // TODO handle this case.
     }
   }

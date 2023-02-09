@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
+
+import '../../controller/play_list_controller.dart';
+import '../../controller/player_controller.dart';
+import '../../services/query_songs.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -10,6 +15,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final permissionController = Get.find<SongController>();
+
   @override
   void initState() {
     super.initState();
@@ -18,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _navigatToHomeScreen() async {
     await Future.delayed(const Duration(milliseconds: 1500));
-    Get.offAllNamed('/home');
+    (permissionController.permission.value) ? Get.offAllNamed('/home') : null;
   }
 
   @override

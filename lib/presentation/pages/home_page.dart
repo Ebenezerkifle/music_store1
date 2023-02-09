@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:mucic_store/controller/app_controllers.dart';
 import 'package:mucic_store/controller/app_scroll_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/controller/play_list_controller.dart';
@@ -18,12 +18,10 @@ import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
 
 // homepage is the landing page for this application. on which we have alot options
-// to choose...hat ever we want to choose.
+// to choose...
 
+// ignore: must_be_immutable
 class HomePage extends StatelessWidget {
-  //The app displays a list of musics which are catagorized on different possible
-  //catagories. catagoryList is a variable to store those catagories.
-
   final playListController = Get.find<PlayListController>();
   final songListController = Get.find<SongController>();
   final playController = Get.find<PlayerController>();
@@ -35,9 +33,8 @@ class HomePage extends StatelessWidget {
     "Recent",
     "Favorite",
   ];
-
-  // active Index is a variable that stores the index value of a catagoryList above
-  // so that corresponding list of musics displayed.
+  //The app displays a list of musics which are catagorized on different possible
+  //catagories. catagoryList is a variable to store those catagories.
 
   //a variable to control the visisbility of a floating button.
   late bool floatingButtonVisiblity = false;
@@ -73,15 +70,6 @@ class HomePage extends StatelessWidget {
                   ),
                   textScaleFactor: 1.2,
                 ),
-                // actions: [
-                //   IconButton(
-                //     onPressed: () {},
-                //     icon: const Icon(
-                //       Icons.search,
-                //       color: Colors.white,
-                //     ),
-                //   )
-                // ],
               ),
               SliverPersistentHeader(
                 pinned: false,
@@ -111,7 +99,8 @@ class HomePage extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const AlbumListPage());
+                                  Get.to(() => const AlbumListPage(),
+                                      binding: AppControllers());
                                 },
                                 child: const Text(
                                   'see all',
@@ -152,9 +141,11 @@ class HomePage extends StatelessWidget {
                                           .albumList[index][0].artist,
                                     ],
                                     onTap: () {
-                                      Get.to(() => AlbumTrackPage(
-                                          album: songListController
-                                              .albumList[index]));
+                                      Get.to(
+                                          () => AlbumTrackPage(
+                                              album: songListController
+                                                  .albumList[index]),
+                                          binding: AppControllers());
                                     },
                                   ),
                                 ),
@@ -183,7 +174,8 @@ class HomePage extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () {
                                       Get.to(
-                                          () => TrackListPage(title: "Tracks"));
+                                          () => TrackListPage(title: "Tracks"),
+                                          binding: AppControllers());
                                     },
                                     child: const Text(
                                       'see all',
@@ -318,6 +310,7 @@ class HomePage extends StatelessWidget {
                                     id: playListController
                                         .currentSongs[index].id,
                                   ),
+                                  binding: AppControllers(),
                                 );
                               },
                               onPlayTap: () {

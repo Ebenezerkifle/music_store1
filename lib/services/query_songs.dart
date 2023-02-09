@@ -11,14 +11,17 @@ class QuerySongs {
     audioQuery = OnAudioQuery();
   }
 
-  void requestStoragePermission() async {
+  Future<bool> requestStoragePermission() async {
     late bool permissionStatus;
     if (!kIsWeb) {
       permissionStatus = await audioQuery.permissionsStatus();
       if (!permissionStatus) {
-        await audioQuery.permissionsRequest();
+        permissionStatus = await audioQuery.permissionsRequest();
+        print('--------------------------------');
+        print(permissionStatus);
       }
     }
+    return permissionStatus;
   }
 
   Future<List<Music>> getListOfSongs() async {
