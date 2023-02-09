@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayListController extends GetxController {
   final index = 0.obs;
@@ -7,6 +9,31 @@ class PlayListController extends GetxController {
   final allSongs = <Music>[].obs;
   final recentsSongs = <Music>[].obs;
   final favoriteSongs = <Music>[].obs;
+  late SharedPreferences pref;
+  final String _favorite = 'favorite';
+  final String _recent = 'recent';
+  final songController = Get.find<SongController>();
+
+  PlayListController() {
+    loadPlayLists();
+    queryFromStorage();
+  }
+  void queryFromStorage() async {
+    pref = await SharedPreferences.getInstance();
+    // if the key exists it fatchs favorite songs.
+    pref.containsKey(_favorite)
+        ? favoriteSongs(Music.decode(pref.getString(_favorite) ?? ''))
+        : null;
+
+    pref.containsKey(_recent)
+        ? recentsSongs(Music.decode(pref.getString(_recent) ?? ''))
+        : null;
+  }
+
+  void loadPlayLists() {
+    allSongs(songController.songList);
+    currentSongs(allSongs);
+  }
 
   loadAllSongs(List<Music> songs) {
     allSongs(songs);
@@ -14,15 +41,31 @@ class PlayListController extends GetxController {
 
   loadRecentSongs(List<Music> songs) {
     recentsSongs(songs);
+    storeOnDevice(_recent, recentsSongs);
   }
 
   loadFavoriteSongs(List<Music> songs) {
     favoriteSongs(songs);
+    storeOnDevice(_favorite, favoriteSongs);
   }
 
-  // loadCurrentSongs(List<Music> songs) {
-  //   currentSongs(songs);
-  // }
+  void removeFromFavorite(Music music) {
+    for (int i = 0; i < favoriteSongs.length; i++) {
+      if (favoriteSongs[i].id == music.id) {
+        favoriteSongs.removeAt(i);
+        break;
+      }
+    }
+    storeOnDevice(_favorite, favoriteSongs);
+  }
+
+  void storeOnDevice(String key, List<Music> songList) async {
+    pref = await SharedPreferences.getInstance();
+    String json = Music.encode(songList);
+    pref.setString(key, json).then((value) {
+      //Todo do something here!
+    });
+  }
 
   updateIndex(int i) {
     index(i);
@@ -40,21 +83,13 @@ class PlayListController extends GetxController {
   }
 
   void addToRecentPlayList(Music currentSong) {
-    for (Music song in recentsSongs) {
-      if (song.id == currentSong.id) {
-        return;
+    for (int i = 0; i < recentsSongs.length; i++) {
+      if (recentsSongs[i].id == currentSong.id) {
+        recentsSongs.removeAt(i);
+        break;
       }
     }
     List<Music> list = [currentSong, ...recentsSongs];
     loadRecentSongs(list);
-  }
-
-  void removeFromFavorite(Music music) {
-    for (int i = 0; i < favoriteSongs.length; i++) {
-      if (favoriteSongs[i].id == music.id) {
-        favoriteSongs.removeAt(i);
-        break;
-      }
-    }
   }
 }

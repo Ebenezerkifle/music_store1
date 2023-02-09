@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mucic_store/controller/play_list_controller.dart';
+import 'package:mucic_store/controller/song_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
 
 class PlayerController extends GetxController {
@@ -22,11 +23,15 @@ class PlayerController extends GetxController {
   final artist = ''.obs;
   final playMode = 0.obs; // a variable to hold the value of a playmode
   // 3-loop all, 2-loop single, 1-shaffle and 0-no loop,
+  final songController = Get.find<SongController>();
 
   PlayerController() {
     _audioPlayer = AudioPlayer();
     _playList = ConcatenatingAudioSource(children: []);
-    //loadPlayList(playList, 0);
+    defaultPlayList();
+  }
+  defaultPlayList() async {
+    await loadPlayList(songController.songList, 0);
   }
 
   loadPlayList(List<Music> playList, int index) async {

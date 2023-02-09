@@ -48,13 +48,13 @@ class PlayingPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.1,
           ),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/mic.jpg"),
-              fit: BoxFit.cover,
-              opacity: 0,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage("assets/images/defaultpic.jpg"),
+          //     fit: BoxFit.cover,
+          //     opacity: 10,
+          //   ),
+          // ),
           alignment: AlignmentDirectional.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +73,8 @@ class PlayingPage extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('assets/images/mic.jpg'))),
+                              image:
+                                  AssetImage('assets/images/defaultpic.jpg'))),
                     ),
                   ),
                 ),

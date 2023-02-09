@@ -46,7 +46,7 @@ Widget customeListTile({
                         radius: MediaQuery.of(context).size.height * 0.04,
                         backgroundColor: Colors.transparent,
                         backgroundImage: const AssetImage(
-                          'assets/images/mic.jpg',
+                          'assets/images/defaultsongpic.jpg',
                         ),
                       ),
                     ),

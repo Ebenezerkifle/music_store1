@@ -69,8 +69,8 @@ Widget currentSong({
                             type: ArtworkType.AUDIO,
                             nullArtworkWidget: CircleAvatar(
                               radius: MediaQuery.of(context).size.height * 0.03,
-                              backgroundImage:
-                                  const AssetImage("assets/images/mic.jpg"),
+                              backgroundImage: const AssetImage(
+                                  "assets/images/defaultsongpic.jpg"),
                             ),
                           ),
                           SizedBox(

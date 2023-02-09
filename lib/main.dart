@@ -3,6 +3,7 @@ import 'package:mucic_store/controller/app_controllers.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/home_page.dart';
 import 'package:get/get.dart';
+import 'package:mucic_store/presentation/pages/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,8 +24,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       getPages: [
-        GetPage(name: "/", page: (() => HomePage())),
-        //  GetPage(name: "/", page: (() => const HomePage())),
+        GetPage(name: "/", page: (() => const SplashScreen())),
+        GetPage(name: "/home", page: (() => HomePage())),
       ],
     );
   }

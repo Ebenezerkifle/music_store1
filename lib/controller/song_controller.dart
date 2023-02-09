@@ -18,14 +18,14 @@ class SongController extends GetxController {
   }
 
   fetchSongs() async {
-    QuerySongs querysSongs = QuerySongs();
-    querysSongs.requestStoragePermission();
-    bool permissionStatus = await querysSongs.audioQuery.permissionsStatus();
+    QuerySongs querySongs = QuerySongs();
+    querySongs.requestStoragePermission();
+    bool permissionStatus = await querySongs.audioQuery.permissionsStatus();
     if (permissionStatus) {
       songsLoading(true);
-      songList(await querysSongs.getListOfSongs());
-      albums(querysSongs.getAlbumList());
-      songMap(querysSongs.getIdSongMap());
+      songList(await querySongs.getListOfSongs());
+      albums(querySongs.getAlbumList());
+      songMap(querySongs.getIdSongMap());
       updateAlbumList();
       songsLoaded(true);
     } else {

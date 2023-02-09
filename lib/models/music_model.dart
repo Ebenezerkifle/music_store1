@@ -40,7 +40,7 @@ class Music {
         id: map['id'],
         album: map['album'],
         duration: map['duration'],
-        artist: map['artst'],
+        artist: map['artist'],
         displayNameWOExt: map['displayNameWOExt'],
         isFavorite: map['isFavorite']);
   }
@@ -59,6 +59,6 @@ class Music {
 
   static List<Music> decode(String musics) =>
       (json.decode(musics) as List<dynamic>)
-          .map<Music>((item) => Music.fromJson(item))
+          .map<Music>((item) => Music.fromMap(item))
           .toList();
 }

@@ -39,43 +39,12 @@ class HomePage extends StatelessWidget {
   // active Index is a variable that stores the index value of a catagoryList above
   // so that corresponding list of musics displayed.
 
-  // ToDo this logic is not working yet!
-  bool playing = false;
-
   //a variable to control the visisbility of a floating button.
   late bool floatingButtonVisiblity = false;
   //a variable to control the visibility of a bottom Navigation bar.
   late bool bottomNavVisibility = true;
 
   HomePage({Key? key}) : super(key: key);
-
-  // scroll controller is here to give us the information about our scrolling
-  // we want this controller to help us decide if the floating button and bottom navigation bar
-  // has to be hidden or not.
-  // final ScrollController _scrollController = ScrollController();
-  // var controller = ScrollController.obs;
-
-  //init state calls the listener as soon as the app starts, to get the information about
-  // the scrolling.
-  // @override
-  // void initState() {
-  //   _scrollController.addListener(() {
-  //     //scroll listener
-  //     double showoffset = 40.0;
-  //     //Back to top button(floating action button) will show on scroll offset 40.0
-  //     //Bottom Navigation button will get hide on scroll offset 40.0.
-  //     if (_scrollController.offset > showoffset) {
-  //       floatingButtonVisiblity = true;
-  //       bottomNavVisibility = false;
-  //       setState(() {});
-  //     } else {
-  //       floatingButtonVisiblity = false;
-  //       bottomNavVisibility = true;
-  //       setState(() {});
-  //     }
-  //   });
-  //   super.initState();
-  // }
 
   // a function to format time in two digit form.
   //mostly we get trouble when we have a second value lessthan 10
@@ -84,10 +53,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      playListController.loadAllSongs(songListController.songList);
-      playListController.updateIndex(playListController.index.value);
-    });
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
@@ -122,7 +87,7 @@ class HomePage extends StatelessWidget {
                 pinned: false,
                 floating: true,
                 delegate: PersistentHeader(
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.43,
                   color: MyColors.primaryColor,
                   context: context,
                   widget: Container(
@@ -179,7 +144,7 @@ class HomePage extends StatelessWidget {
                                     title: songListController
                                         .albumList[index][0].album,
                                     height: MediaQuery.of(context).size.height *
-                                        0.2,
+                                        0.22,
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
                                     smallDetails: [

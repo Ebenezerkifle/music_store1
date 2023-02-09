@@ -39,7 +39,7 @@ Widget customeGridWidget({
                         borderRadius: BorderRadius.all(Radius.circular(
                             MediaQuery.of(context).size.width * 0.1)),
                         image: const DecorationImage(
-                          image: AssetImage('assets/images/mic.jpg'),
+                          image: AssetImage('assets/images/defaultpic.jpg'),
                           fit: BoxFit.fitWidth,
                         ),
                         color: MyColors.primaryColor,
