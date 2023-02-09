@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:on_audio_query/on_audio_query.dart';
-
-import '../models/music_model.dart';
+import 'package:mucic_store/models/music_model.dart';
 
 class PlayerController extends GetxController {
   final songId = 0.obs;
@@ -19,24 +18,28 @@ class PlayerController extends GetxController {
   late final AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _playList;
   final showList = false.obs;
-  final currentPlayList = <SongModel>[].obs;
+  final currentPlayList = <Music>[].obs;
   final songUri = ''.obs;
   final artist = ''.obs;
+  final playMode = 0.obs; // a variable to hold the value of a playmode
+  // 3-loop all, 2-loop single, 1-shaffle and 0-no loop,
+  final songController = Get.find<SongController>();
 
-  // var currentSong = SongModel.obs;
-
-  PlayerController(List<SongModel> playList) {
+  PlayerController() {
     _audioPlayer = AudioPlayer();
     _playList = ConcatenatingAudioSource(children: []);
-    loadPlayList(playList);
+    defaultPlayList();
+  }
+  defaultPlayList() async {
+    await loadPlayList(songController.songList, 0);
   }
 
-  loadPlayList(List<SongModel> playList) async {
+  loadPlayList(List<Music> playList, int index) async {
     _playList = ConcatenatingAudioSource(
       children: List.generate(
         playList.length,
         (index) => AudioSource.uri(
-          Uri.parse(playList[index].uri ?? ''),
+          Uri.parse(playList[index].uri),
           tag: [
             playList[index].id,
             playList[index].title,
@@ -48,11 +51,8 @@ class PlayerController extends GetxController {
         ),
       ),
     );
-    //a method to control playing and pauseing an audio.
-    //if it is playing the action should pause.
-    // else it should play.
 
-    _audioPlayer.setAudioSource(_playList);
+    _audioPlayer.setAudioSource(_playList, initialIndex: index);
     currentPlayList(playList);
     (_playList.length > 0) ? playerListner() : null;
   }
@@ -97,6 +97,7 @@ class PlayerController extends GetxController {
       songSubtitle(sequenceState.currentSource!.tag[2]);
       album(sequenceState.currentSource!.tag[3]);
       songUri(sequenceState.currentSource!.tag[4]);
+      artist(sequenceState.currentSource!.tag[5]);
       // TODO: update playlist
       // TODO: update shuffle mode
       // TODO: update previous and next buttons
@@ -127,22 +128,9 @@ class PlayerController extends GetxController {
     _audioPlayer.pause();
   }
 
-  final songController = Get.find<SongController>();
+  final recentPlayList = Get.find<PlayListController>();
   void play() {
     _audioPlayer.play();
-
-    // Todo check if there is a recent playlist not only being empty
-    // Todo every time when play button is clicked it should update the recent items.
-    // songController.addToPlayList(
-    //     "Recent",
-    //     Music(
-    //       album: album.value,
-    //       id: songId.value,
-    //       duration: totalDuration.value.inMilliseconds,
-    //       uri: songUri.value,
-    //       title: songTitle.value,
-    //       artist: artist.value,
-    //     ));
   }
 
   void onPreviousButtonclick() {
@@ -161,6 +149,10 @@ class PlayerController extends GetxController {
     }
   }
 
+  void onShuffleClick() {
+    _audioPlayer.shuffle();
+  }
+
   //a method to toggle between a progress time and remaining time.
   updateWhatToShow() {
     (showRemaining.value) ? showRemaining(false) : showRemaining(true);
@@ -168,20 +160,5 @@ class PlayerController extends GetxController {
 
   toggleShowList() {
     showList(showList.value ? false : true);
-  }
-
-  void generatePlayList(List<SongModel> songList, int index) {
-    List<SongModel> newPlayList = [];
-    if (index != 0) {
-      for (int i = index; i < songList.length; i++) {
-        newPlayList.add(songList[i]);
-      }
-      for (int j = 0; j < index; j++) {
-        newPlayList.add(songList[j]);
-      }
-      loadPlayList(newPlayList);
-    } else {
-      loadPlayList(songList);
-    }
   }
 }

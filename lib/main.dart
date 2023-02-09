@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mucic_store/controller/player_controller.dart';
-import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
+import 'package:mucic_store/controller/app_controllers.dart';
 import 'package:mucic_store/presentation/my_colors/color.dart';
 import 'package:mucic_store/presentation/pages/home_page.dart';
-import 'package:mucic_store/services/query_songs.dart';
+import 'package:get/get.dart';
+import 'package:mucic_store/presentation/pages/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(TrackCatagoryController());
-    Get.put(SongController());
-    Get.put(PlayerController([]));
-    Get.put(QuerySongs());
-
     return GetMaterialApp(
       title: 'Music Store',
+      initialBinding: AppControllers(),
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.downToUp,
       theme: ThemeData(
@@ -29,7 +24,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       getPages: [
-        GetPage(name: "/", page: (() => const HomePage())),
+        GetPage(
+            name: "/",
+            page: (() => const SplashScreen()),
+            binding: AppControllers()),
+        GetPage(
+            name: "/home", page: (() => HomePage()), binding: AppControllers()),
       ],
     );
   }

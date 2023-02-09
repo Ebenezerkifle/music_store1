@@ -1,69 +1,47 @@
 import 'package:get/get.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
 import 'package:mucic_store/models/music_model.dart';
 import 'package:mucic_store/services/query_songs.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SongController extends GetxController {
-  final songList = <SongModel>[].obs;
+  final songList = <Music>[].obs;
+  final songMap = <int, Music>{}.obs;
   final songsLoading = true.obs;
   final songsLoaded = false.obs;
-  final albumList = <List<SongModel>>[].obs;
-  final albums = <String, List<SongModel>>{}.obs;
+  final albumList = <List<Music>>[].obs;
+  final albums = <String, List<Music>>{}.obs;
   final playList = <Music>[].obs; // recent playlist
   static late SharedPreferences pref;
+  final permission = false.obs;
 
   SongController() {
     fetchSongs();
   }
 
   fetchSongs() async {
-    QuerySongs querysSongs = QuerySongs();
-    querysSongs.requestStoragePermission();
-    bool permissionStatus = await querysSongs.audioQuery.permissionsStatus();
+    QuerySongs querySongs = QuerySongs();
+    bool permissionStatus = await querySongs.requestStoragePermission();
     if (permissionStatus) {
+      permission(true);
       songsLoading(true);
-      songList(await querysSongs.getListOfSongs());
-      albums(querysSongs.getAlbumList());
+      songList(await querySongs.getListOfSongs());
+      albums(querySongs.getAlbumList());
+      songMap(querySongs.getIdSongMap());
       updateAlbumList();
-      // playList(await getPlayList("Recent"));
       songsLoaded(true);
-    } else {}
+    } else {
+      permission(false);
+      // TODO handle this case.
+    }
   }
 
+  // a method that creates an album list with songs on it.
   updateAlbumList() {
     List<String> keys = [...albums.keys];
-    List<List<SongModel>> albumsList1 = [];
+    List<List<Music>> albumsList1 = [];
     for (var key in keys) {
       albumsList1.add(albums[key] ?? []);
     }
     albumList(albumsList1);
   }
-
-  // Future<List<Music>> getPlayList(String name) async {
-  //   pref = await SharedPreferences.getInstance();
-  //   final String? musicsString = pref.getString(name);
-  //   print("-------------------------");
-  //   print(musicsString);
-  //   List<Music> playList =
-  //       (musicsString != null) ? Music.decode(musicsString) : [];
-  //   print(playList);
-  //   return playList;
-  // }
-
-  // addToPlayList(String name, Music music) async {
-  //   final catagory = Get.find<TrackCatagoryController>();
-  //   pref = await SharedPreferences.getInstance();
-  //   List<Music> previousList = [];
-  //   previousList.add(music);
-  //   final String? musicsString = pref.getString(name);
-  //   previousList =
-  //       (musicsString != null) ? Music.decode(musicsString) : previousList;
-  //   print("**************************************");
-  //   print(previousList.toList());
-  //   final String encodeData = Music.encode(previousList);
-  //   print(encodeData);
-  //   await pref.setString(name, encodeData);
-  // }
 }

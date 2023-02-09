@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mucic_store/controller/app_controllers.dart';
+import 'package:mucic_store/controller/app_scroll_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/controller/track_catagory_controller.dart';
+import 'package:mucic_store/controller/play_list_controller.dart';
 import 'package:mucic_store/presentation/pages/albums_list.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/pages/track_list_page.dart';
@@ -16,82 +18,30 @@ import '../widgets/silver_presistent_widget.dart';
 import 'album_track_page.dart';
 
 // homepage is the landing page for this application. on which we have alot options
-// to choose...hat ever we want to choose.
+// to choose...
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  //The app displays a list of musics which are catagorized on different possible
-  //catagories. catagoryList is a variable to store those catagories.
-
-  final catagoryController = Get.find<TrackCatagoryController>();
+// ignore: must_be_immutable
+class HomePage extends StatelessWidget {
+  final playListController = Get.find<PlayListController>();
   final songListController = Get.find<SongController>();
   final playController = Get.find<PlayerController>();
   final querySongsController = Get.find<QuerySongs>();
+  final scrollController = Get.find<AppScrollController>();
 
   List<String> catagoryList = [
     "All",
     "Recent",
     "Favorite",
   ];
-
-  // active Index is a variable that stores the index value of a catagoryList above
-  // so that corresponding list of musics displayed.
-
-  // ToDo this logic is not working yet!
-  bool playing = false;
+  //The app displays a list of musics which are catagorized on different possible
+  //catagories. catagoryList is a variable to store those catagories.
 
   //a variable to control the visisbility of a floating button.
   late bool floatingButtonVisiblity = false;
   //a variable to control the visibility of a bottom Navigation bar.
   late bool bottomNavVisibility = true;
 
-  // scroll controller is here to give us the information about our scrolling
-  // we want this controller to help us decide if the floating button and bottom navigation bar
-  // has to be hidden or not.
-  final ScrollController _scrollController = ScrollController();
-  // var controller = ScrollController.obs;
-
-  //init state calls the listener as soon as the app starts, to get the information about
-  // the scrolling.
-  // @override
-  // void initState() {
-  //   _scrollController.addListener(() {
-  //     //scroll listener
-  //     double showoffset = 40.0;
-  //     //Back to top button(floating action button) will show on scroll offset 40.0
-  //     //Bottom Navigation button will get hide on scroll offset 40.0.
-  //     if (_scrollController.offset > showoffset) {
-  //       floatingButtonVisiblity = true;
-  //       bottomNavVisibility = false;
-  //       setState(() {});
-  //     } else {
-  //       floatingButtonVisiblity = false;
-  //       bottomNavVisibility = true;
-  //       setState(() {});
-  //     }
-  //   });
-  //   super.initState();
-  // }
-
-  void scrollToTop() {
-    // a method to bring the top element of a scrollable widget.
-    setState(() {
-      _scrollController.animateTo(
-        _scrollController.position.minScrollExtent,
-        // maxScrollExtent - down most.
-        // minScrollExtent - up most.
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(milliseconds: 500),
-      );
-      floatingButtonVisiblity = false;
-    });
-  }
+  HomePage({Key? key}) : super(key: key);
 
   // a function to format time in two digit form.
   //mostly we get trouble when we have a second value lessthan 10
@@ -100,9 +50,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    catagoryController.loadAllSongs(songListController.songList);
-    catagoryController.updateIndex(catagoryController.index.value);
-
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
@@ -110,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           color: MyColors.primaryColor,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-            controller: _scrollController,
+            controller: scrollController.scrollController,
             slivers: <Widget>[
               const SliverAppBar(
                 backgroundColor: Colors.black,
@@ -123,21 +70,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   textScaleFactor: 1.2,
                 ),
-                // actions: [
-                //   IconButton(
-                //     onPressed: () {},
-                //     icon: const Icon(
-                //       Icons.search,
-                //       color: Colors.white,
-                //     ),
-                //   )
-                // ],
               ),
               SliverPersistentHeader(
                 pinned: false,
                 floating: true,
                 delegate: PersistentHeader(
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.43,
                   color: MyColors.primaryColor,
                   context: context,
                   widget: Container(
@@ -161,7 +99,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => const AlbumListPage());
+                                  Get.to(() => const AlbumListPage(),
+                                      binding: AppControllers());
                                 },
                                 child: const Text(
                                   'see all',
@@ -192,21 +131,21 @@ class _HomePageState extends State<HomePage> {
                                         .albumList[index][0].id,
                                     context: context,
                                     title: songListController
-                                            .albumList[index][0].album ??
-                                        '',
+                                        .albumList[index][0].album,
                                     height: MediaQuery.of(context).size.height *
-                                        0.2,
+                                        0.22,
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
                                     smallDetails: [
                                       songListController
-                                              .albumList[index][0].artist ??
-                                          '',
+                                          .albumList[index][0].artist,
                                     ],
                                     onTap: () {
-                                      Get.to(() => AlbumTrackPage(
-                                          album: songListController
-                                              .albumList[index]));
+                                      Get.to(
+                                          () => AlbumTrackPage(
+                                              album: songListController
+                                                  .albumList[index]),
+                                          binding: AppControllers());
                                     },
                                   ),
                                 ),
@@ -234,8 +173,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Get.to(() =>
-                                          const TrackListPage(title: "Tracks"));
+                                      Get.to(
+                                          () => TrackListPage(title: "Tracks"),
+                                          binding: AppControllers());
                                     },
                                     child: const Text(
                                       'see all',
@@ -267,14 +207,14 @@ class _HomePageState extends State<HomePage> {
                                                 bottom: 8.0),
                                             child: GestureDetector(
                                               onTap: () {
-                                                catagoryController
+                                                playListController
                                                     .updateIndex(index);
                                               },
                                               child: Container(
                                                 padding: const EdgeInsets.only(
                                                     left: 5, right: 5),
                                                 decoration: BoxDecoration(
-                                                  color: (catagoryController
+                                                  color: (playListController
                                                               .index.value ==
                                                           index)
                                                       ? Colors.yellow
@@ -291,14 +231,14 @@ class _HomePageState extends State<HomePage> {
                                                 child: Text(
                                                   catagoryList[index],
                                                   textScaleFactor:
-                                                      (catagoryController.index
+                                                      (playListController.index
                                                                   .value ==
                                                               index)
                                                           ? 1.2
                                                           : 1.1,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: (catagoryController
+                                                    color: (playListController
                                                                 .index.value ==
                                                             index)
                                                         ? Colors.black
@@ -323,13 +263,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Obx(
-                () => (catagoryController.currentSongs.isEmpty)
+                () => (playListController.currentSongs.isEmpty)
                     ? SliverFillRemaining(
                         child: Center(
                           child: Text(
-                            (catagoryController.index.value == 0)
+                            (playListController.index.value == 0)
                                 ? "There is no Song in your device"
-                                : (catagoryController.index.value == 1)
+                                : (playListController.index.value == 1)
                                     ? "No Recent Songs"
                                     : "No Favorite Songs",
                             style: const TextStyle(
@@ -343,68 +283,60 @@ class _HomePageState extends State<HomePage> {
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             return customeListTile(
-                              title:
-                                  catagoryController.currentSongs[index].title,
+                              music: playListController.currentSongs[index],
                               context: context,
-                              id: catagoryController.currentSongs[index].id,
                               onTap: () {
                                 if (!playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.play();
                                 } else if (playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
-                                  playController.pause();
+                                  // playController.pause();
                                 } else {
-                                  playController.generatePlayList(
-                                      catagoryController.currentSongs, index);
+                                  playController.loadPlayList(
+                                      playListController.currentSongs, index);
                                   playController.play();
                                 }
                                 Get.to(
                                   () => PlayingPage(
                                     isPlaying: playController.isPlaying(
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id),
                                     index: index,
-                                    id: catagoryController
+                                    id: playListController
                                         .currentSongs[index].id,
                                   ),
+                                  binding: AppControllers(),
                                 );
                               },
                               onPlayTap: () {
                                 if (!playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.play();
                                 } else if (playController.playing.value &&
                                     playController.songId.value ==
-                                        catagoryController
+                                        playListController
                                             .currentSongs[index].id) {
                                   playController.pause();
                                 } else {
-                                  playController.generatePlayList(
-                                      catagoryController.currentSongs, index);
+                                  playController.loadPlayList(
+                                      playListController.currentSongs, index);
                                   playController.play();
                                 }
                               },
-                              smallDetails: [
-                                catagoryController.currentSongs[index].album ??
-                                    '',
-                                catagoryController.currentSongs[index].artist ??
-                                    ''
-                              ],
                               color: MyColors.primaryColor,
                               duration: Duration(
-                                  milliseconds: catagoryController
-                                          .currentSongs[index].duration ??
-                                      0),
+                                  milliseconds: playListController
+                                      .currentSongs[index].duration),
                             );
                           },
-                          childCount: catagoryController.currentSongs.length,
+                          childCount: playListController.currentSongs.length,
                         ),
                       ),
               )
@@ -416,7 +348,7 @@ class _HomePageState extends State<HomePage> {
         visible: floatingButtonVisiblity,
         child: FloatingActionButton(
           onPressed: () {
-            scrollToTop();
+            scrollController.scrollToTop();
           },
           backgroundColor: Colors.black,
           child: const Icon(
@@ -426,7 +358,15 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: Wrap(children: [
-        currentSong(context: context),
+        Obx(
+          () {
+            //TODO work on obx
+            // Future.delayed(Duration.zero,(){.......});
+            return (playController.songId.value != 0)
+                ? currentSong(context: context)
+                : Container();
+          },
+        ),
         Container(
           height: 0.2,
           width: MediaQuery.of(context).size.width,
@@ -450,40 +390,6 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(Icons.settings), label: "setting"),
             ],
           ),
-          // child: Container(
-          //   height: MediaQuery.of(context).size.height * 0.06,
-          //   width: MediaQuery.of(context).size.width,
-          //   color: Colors.black,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: [
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.home_filled,
-          //             color: Colors.yellow,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.favorite_rounded,
-          //             color: Colors.white,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.list,
-          //             color: Colors.white,
-          //           )),
-          //       IconButton(
-          //           onPressed: () {},
-          //           icon: const Icon(
-          //             Icons.settings,
-          //             color: Colors.white,
-          //           ))
-          //     ],
-          //   ),
-          // ),
         ),
       ]),
     );

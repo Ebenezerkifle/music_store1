@@ -5,15 +5,15 @@ import 'package:mucic_store/presentation/widgets/more_option_widget.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 
+import '../../models/music_model.dart';
+
 Widget customeListTile({
-  required String title,
+  required Music music,
   required BuildContext context,
   required VoidCallback onTap,
-  required List<String> smallDetails,
   Color? color,
   required Duration duration,
   required VoidCallback onPlayTap,
-  required int id,
 }) {
   final playerController = Get.find<PlayerController>();
   String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -40,13 +40,13 @@ Widget customeListTile({
                   alignment: AlignmentDirectional.center,
                   children: [
                     QueryArtworkWidget(
-                      id: id,
+                      id: music.id,
                       type: ArtworkType.AUDIO,
                       nullArtworkWidget: CircleAvatar(
                         radius: MediaQuery.of(context).size.height * 0.04,
                         backgroundColor: Colors.transparent,
                         backgroundImage: const AssetImage(
-                          'assets/images/mic.jpg',
+                          'assets/images/defaultsongpic.jpg',
                         ),
                       ),
                     ),
@@ -54,10 +54,10 @@ Widget customeListTile({
                       () => IconButton(
                         onPressed: onPlayTap,
                         icon: Icon(playerController.playing.value &&
-                                playerController.songId.value == id
+                                playerController.songId.value == music.id
                             ? Icons.pause_rounded
                             : Icons.play_arrow_rounded),
-                        color: playerController.songId.value == id
+                        color: playerController.songId.value == music.id
                             ? Colors.yellow
                             : Colors.white,
                         iconSize: 38,
@@ -78,13 +78,13 @@ Widget customeListTile({
                       children: [
                         Expanded(
                           child: Text(
-                            title,
+                            music.title,
                             textScaleFactor: 1.2,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: (playerController.songId.value == id)
+                              color: (playerController.songId.value == music.id)
                                   ? Colors.yellow
                                   : (color != null)
                                       ? Colors.white
@@ -94,12 +94,12 @@ Widget customeListTile({
                         ),
                         Expanded(
                           child: Text(
-                            '${smallDetails[0]} - ${smallDetails[1]}',
+                            '${music.album} - ${music.artist}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              color: (playerController.songId.value == id)
+                              color: (playerController.songId.value == music.id)
                                   ? Colors.yellow.shade100
                                   : Colors.grey,
                             ),
@@ -124,18 +124,18 @@ Widget customeListTile({
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                            (playerController.songId.value == id)
+                            (playerController.songId.value == music.id)
                                 ? '${twoDigits(playerController.remaining.value.inMinutes)}:${twoDigits(playerController.remaining.value.inSeconds.remainder(60))}'
                                 : '${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}',
                             style: TextStyle(
-                              color: (playerController.songId.value == id)
+                              color: (playerController.songId.value == music.id)
                                   ? Colors.yellow.shade100
                                   : Colors.grey,
                               fontWeight: FontWeight.normal,
                             )),
                         IconButton(
                           onPressed: () {
-                            Get.bottomSheet(moreOptionWidget(context: context));
+                            moreOption(context: context, music: music);
                           },
                           icon: const Icon(
                             Icons.more_vert,

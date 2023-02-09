@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
-import 'package:mucic_store/presentation/widgets/bottom_sheet_widget.dart';
+import 'package:mucic_store/presentation/widgets/more_option_widget.dart';
 import 'package:mucic_store/presentation/widgets/play_controller_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
@@ -32,12 +32,14 @@ class PlayingPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-                onPressed: () {
-                  bottomSheetWidget(
-                      context: context,
-                      songList: playerController.currentPlayList);
-                },
-                icon: const Icon(Icons.list))
+              onPressed: () {
+                moreOption(
+                  context: context,
+                  music: songListController.songMap[id],
+                );
+              },
+              icon: const Icon(Icons.more_vert),
+            )
           ]),
       body: SafeArea(
         child: Container(
@@ -46,13 +48,13 @@ class PlayingPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.1,
           ),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/mic.jpg"),
-              fit: BoxFit.cover,
-              opacity: 0,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage("assets/images/defaultpic.jpg"),
+          //     fit: BoxFit.cover,
+          //     opacity: 10,
+          //   ),
+          // ),
           alignment: AlignmentDirectional.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -71,7 +73,8 @@ class PlayingPage extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(100)),
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('assets/images/mic.jpg'))),
+                              image:
+                                  AssetImage('assets/images/defaultpic.jpg'))),
                     ),
                   ),
                 ),
@@ -79,7 +82,6 @@ class PlayingPage extends StatelessWidget {
               PlayController(
                 songDetail: playerController.currentPlayList,
                 isPlaying: isPlaying,
-                iconSize: 50,
                 index: index ?? 0,
                 id: id,
               ),
@@ -110,7 +112,7 @@ class PlayingPage extends StatelessWidget {
                   songListController.songList.length,
                   (index) => GestureDetector(
                     onTap: () {
-                      playerController.generatePlayList(
+                      playerController.loadPlayList(
                           songListController.songList, index);
                     },
                     child: Row(

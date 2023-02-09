@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mucic_store/controller/player_controller.dart';
 import 'package:mucic_store/controller/song_controller.dart';
+import 'package:mucic_store/models/music_model.dart';
 import 'package:mucic_store/presentation/pages/playing_page.dart';
 import 'package:mucic_store/presentation/widgets/current_song_widget.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 import '../my_colors/color.dart';
 import '../widgets/custome_grid_list.dart';
@@ -12,7 +12,7 @@ import '../widgets/silver_presistent_widget.dart';
 import 'package:get/get.dart';
 
 class AlbumTrackPage extends StatelessWidget {
-  final List<SongModel> album;
+  final List<Music> album;
   AlbumTrackPage({Key? key, required this.album}) : super(key: key);
 
   final songController = Get.find<SongController>();
@@ -66,7 +66,7 @@ class AlbumTrackPage extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * 0.23,
                           width: MediaQuery.of(context).size.width * 0.4,
                           smallDetails: [
-                            album[0].artist ?? album.length.toString(),
+                            album[0].artist,
                           ],
                           onTap: () {},
                         ),
@@ -81,10 +81,9 @@ class AlbumTrackPage extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return customeListTile(
-                  title: album[index].title,
+                  music: album[index],
                   context: context,
-                  id: album[index].id,
-                  duration: Duration(milliseconds: album[index].duration ?? 0),
+                  duration: Duration(milliseconds: album[index].duration),
                   onTap: () {
                     if (!playerController.playing.value &&
                         playerController.songId.value == album[index].id) {
@@ -93,7 +92,7 @@ class AlbumTrackPage extends StatelessWidget {
                         playerController.songId.value == album[index].id) {
                       playerController.pause();
                     } else {
-                      playerController.generatePlayList(album, index);
+                      playerController.loadPlayList(album, index);
                       playerController.play();
                     }
                     Get.to(
@@ -112,15 +111,12 @@ class AlbumTrackPage extends StatelessWidget {
                         playerController.songId.value == album[index].id) {
                       playerController.pause();
                     } else {
-                      playerController.generatePlayList(album, index);
+                      playerController.loadPlayList(album, index);
                       playerController.play();
                     }
                   },
-                  smallDetails: [
-                    album[index].album ?? '',
-                    album[index].artist ?? ''
-                  ],
-                  color: MyColors.primaryColor,
+                  // color: Colors.grey.shade900,
+                  color: Colors.black87,
                 );
               },
               childCount: album.length,
@@ -128,7 +124,11 @@ class AlbumTrackPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: currentSong(context: context),
+      bottomNavigationBar: Obx(
+        () => (playController.songId.value != 0)
+            ? currentSong(context: context)
+            : Container(),
+      ),
     );
   }
 }
